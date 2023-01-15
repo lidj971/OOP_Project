@@ -2,26 +2,26 @@ package figures;
 
 public abstract class Figure {
 
-	protected String name;
+	//protected String name;
 	
-	public Figure(String name) 
-	{
-		this.name = name;
-	}
-	
-	public String getName() {
+	/*public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
+	}*/
 
-	public abstract void Translater(double x,double y);
+	protected Point center;
 	
-	public abstract void Afficher();
+	abstract public void Translater(double x,double y);
 	
-	public abstract String ToString();
+	abstract public void Afficher(String name);
 	
-	public abstract Point GetCenter();
+	abstract public String ToString();
+	
+	public Point getCenter() 
+	{
+		return center;
+	}
 }
