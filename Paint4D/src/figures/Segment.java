@@ -35,20 +35,20 @@ public class Segment extends Figure{
 	@Override
 	public void Afficher(String name) {
 		// TODO Auto-generated method stub
-		System.out.println(name + ": " + ToString());
+		System.out.println(name + ": " + "["+ ToString() + "]");
 	}
 
 	@Override
 	public String ToString() {
 		// TODO Auto-generated method stub
-		return getP1().ToString() + " " + getP2().ToString();
+		return getP1().ToString() + ", " + getP2().ToString();
 	}
 	
 	@Override
-	public Point getCenter() 
+	public Point getCentre() 
 	{
-		Point center = new Point((getP1().getX() + getP2().getX()) / 2,(getP1().getY() + getP2().getY()) / 2);
-		return center;
+		centre = new Point((getP1().getX() + getP2().getX()) / 2,(getP1().getY() + getP2().getY()) / 2);
+		return centre;
 	}
 	
 	public double getLongueur() 

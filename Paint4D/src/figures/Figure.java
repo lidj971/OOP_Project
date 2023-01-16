@@ -2,17 +2,7 @@ package figures;
 
 public abstract class Figure {
 
-	//protected String name;
-	
-	/*public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}*/
-
-	protected Point center;
+	protected Point centre;
 	
 	abstract public void Translater(double x,double y);
 	
@@ -20,8 +10,8 @@ public abstract class Figure {
 	
 	abstract public String ToString();
 	
-	public Point getCenter() 
+	public Point getCentre() 
 	{
-		return center;
+		return centre;
 	}
 }

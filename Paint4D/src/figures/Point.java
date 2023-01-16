@@ -41,13 +41,6 @@ public class Point extends Figure{
 		this.y = y;
 	}
 	
-	@Override
-	public Point getCenter() 
-	{
-		center = this;
-		return center;
-	}
-	
 	public String ToString() {
 		
 		return "(" + x + ", " + y + ")";
