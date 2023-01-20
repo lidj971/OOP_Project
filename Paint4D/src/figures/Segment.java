@@ -33,26 +33,30 @@ public class Segment extends Figure{
 	}
 
 	@Override
-	public void Afficher(String name) {
+	public void Afficher() {
 		// TODO Auto-generated method stub
-		System.out.println(name + ": " + "["+ ToString() + "]");
+		System.out.println(ToString());
 	}
 
 	@Override
 	public String ToString() {
 		// TODO Auto-generated method stub
-		return getP1().ToString() + ", " + getP2().ToString();
+		return "[" + getP1().ToString() + ", " + getP2().ToString() + "]";
 	}
 	
 	@Override
 	public Point getCentre() 
 	{
-		centre = new Point((getP1().getX() + getP2().getX()) / 2,(getP1().getY() + getP2().getY()) / 2);
-		return centre;
+		return new Point((getP1().getX() + getP2().getX()) / 2,(getP1().getY() + getP2().getY()) / 2);
 	}
 	
 	public double getLongueur() 
 	{
 		return getP1().Distance(getP2());
+	}
+	
+	public boolean Equals(Segment segment) 
+	{
+		return (segment.getP1().equals(getP1()) && segment.getP2().equals(getP2())) || (segment.getP1().equals(getP2()) && segment.getP2().equals(getP1()));
 	}
 }

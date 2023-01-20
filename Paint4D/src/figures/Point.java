@@ -21,8 +21,8 @@ public class Point extends Figure{
 		this.y += y;
 	}
 	
-	public void Afficher(String name) {
-		System.out.println(name + ToString());
+	public void Afficher() {
+		System.out.println(ToString());
 	}
 
 	public double getX() {
@@ -49,5 +49,16 @@ public class Point extends Figure{
 	public double Distance(Point p) 
 	{
 		return Math.sqrt(Math.pow(p.getX() - getX(), 2) + Math.pow(p.getY() - getY(), 2));
+	}
+
+	@Override
+	public Point getCentre() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	public boolean Equals(Point point) {
+		// TODO Auto-generated method stub
+		return (point.getX() == this.getX() && point.getY() == this.getY());
 	}  
 }

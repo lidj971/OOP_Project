@@ -3,6 +3,7 @@ package figures;
 public class Cercle extends Figure{
 	
 	private double rayon;
+	private Point centre;
 	
 	public Cercle(Point centre,double rayon) {
 		this.rayon = rayon;
@@ -22,9 +23,9 @@ public class Cercle extends Figure{
 	}
 
 	@Override
-	public void Afficher(String name) {
+	public void Afficher() {
 		// TODO Auto-generated method stub
-		System.out.println(name + " : " + ToString());
+		System.out.println(ToString());
 	}
 
 	public double getRayon() {
@@ -37,13 +38,24 @@ public class Cercle extends Figure{
 			this.rayon = rayon;
 			return;
 		}
-		System.out.println(ConsoleColors.RED + ConsoleColors.YELLOW_BACKGROUND +"Erreur : rayon <= 0" + ConsoleColors.RESET);
+		System.out.println("Erreur : rayon <= 0");
 	}
 
 	@Override
 	public String ToString() {
 		// TODO Auto-generated method stub
 		return "Centre" + getCentre().ToString() + " r = " + rayon;
+	}
+
+	@Override
+	public Point getCentre() {
+		// TODO Auto-generated method stub
+		return centre;
+	}
+	
+	public boolean Equals(Cercle cercle) 
+	{
+		return getRayon() == cercle.getRayon() && cercle.getCentre().Equals(getCentre());
 	}
 
 }
