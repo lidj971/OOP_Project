@@ -1,7 +1,8 @@
 package figures;
+import java.io.Serializable;
 
-public class Cercle extends Figure{
-	
+
+public class Cercle extends Figure implements Cloneable,Serializable{
 	private double rayon;
 	private Point centre;
 	
@@ -56,6 +57,14 @@ public class Cercle extends Figure{
 	public boolean Equals(Cercle cercle) 
 	{
 		return getRayon() == cercle.getRayon() && cercle.getCentre().Equals(getCentre());
+	}
+	
+	public Cercle clone() 
+	{
+		Cercle c = null;
+		try { c = (Cercle)super.clone();}
+		catch(CloneNotSupportedException e){}
+		return c;
 	}
 
 }

@@ -1,5 +1,6 @@
 package figures;
 
+
 public abstract class Figure {
 	abstract public void Translater(double x,double y);
 	

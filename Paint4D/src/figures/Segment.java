@@ -1,6 +1,7 @@
 package figures;
+import java.io.Serializable;
 
-public class Segment extends Figure{
+public class Segment extends Figure implements Cloneable,Serializable{
 	
 	private Point p1,p2;
 	public Segment(Point p1,Point p2) {
@@ -57,6 +58,14 @@ public class Segment extends Figure{
 	
 	public boolean Equals(Segment segment) 
 	{
-		return (segment.getP1().equals(getP1()) && segment.getP2().equals(getP2())) || (segment.getP1().equals(getP2()) && segment.getP2().equals(getP1()));
+		return (segment.getP1().Equals(getP1()) && segment.getP2().Equals(getP2())) || (segment.getP1().Equals(getP2()) && segment.getP2().Equals(getP1()));
+	}
+	
+	public Segment clone() 
+	{
+		Segment s = null;
+		try { s = (Segment)super.clone();}
+		catch(CloneNotSupportedException e){}
+		return s;
 	}
 }

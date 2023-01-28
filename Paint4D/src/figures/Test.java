@@ -4,7 +4,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		testSegmentNomme();
+		testCercle();
 	}
 	
 	public static void testPoint() 
@@ -19,6 +19,17 @@ public class Test {
 		p2.Afficher();
 		p3.Afficher();
 		System.out.println("Distance(p2,p3) = " + p2.Distance(p3));
+		printEquals(p2.ToString(),p3.ToString(),p2.Equals(p3));
+		printEquals(p1.ToString(),p2.ToString(),p1.Equals(p2));
+		Point p1Bis = p1.clone();
+		if(p1Bis == null) 
+		{
+			System.out.println("Cloning Error");
+			return;
+		}
+		p1.Afficher();
+		System.out.print("Clone = ");
+		p1Bis.Afficher();
 	}
 	
 	public static void testSegment() 
@@ -31,6 +42,21 @@ public class Test {
 		s1.Afficher();
 		System.out.println("Longueur : " + s1.getLongueur());
 		s1.getCentre().Afficher();
+		Segment s2 = new Segment(new Point(-5,-1),new Point(-2,2));
+		Segment s3 = new Segment(s2.getP2(),s1.getP1());
+		printEquals(s1.ToString(),s2.ToString(),s1.Equals(s2));
+		printEquals(s1.ToString(),s3.ToString(),s1.Equals(s3));
+		Segment s4 = new Segment(new Point(0,0),new Point(3,3));
+		printEquals(s1.ToString(),s4.ToString(),s1.Equals(s4));
+		Segment s1Bis = s1.clone();
+		if(s1Bis == null) 
+		{
+			System.out.println("Cloning Error");
+			return;
+		}
+		s1.Afficher();
+		System.out.print("Clone = ");
+		s1Bis.Afficher();
 	}
 	
 	public static void testCercle() 
@@ -45,6 +71,18 @@ public class Test {
 		c2.Afficher();
 		c2.setRayon(-2);
 		c2.Afficher();
+		Cercle c3 = new Cercle(new Point(2,2), 5);
+		printEquals(c1.ToString(),c2.ToString(),c1.Equals(c2));
+		printEquals(c1.ToString(),c3.ToString(),c1.Equals(c3));
+		Cercle c1Bis = c1.clone();
+		if(c1Bis == null) 
+		{
+			System.out.println("Cloning Error");
+			return;
+		}
+		c1.Afficher();
+		System.out.print("Clone = ");
+		c1Bis.Afficher();
 	}
 	
 	public static void testPointNomme() 
@@ -63,4 +101,17 @@ public class Test {
 		s.Afficher();
 	}
 	
+	
+	public static void testPolymorphisme() 
+	{
+		PointNomme p1 = new PointNomme(0,0,"A");
+		PointNomme p2 = new PointNomme(1,1,"B");
+		Segment s = new Segment(p1,p2);
+		s.Afficher();
+	}
+	
+	public static void printEquals(String f1str,String f2str,boolean equal) 
+	{
+		System.out.println(f1str + " == " + f2str + " : " + equal);
+	}
 }

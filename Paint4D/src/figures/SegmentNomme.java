@@ -21,6 +21,7 @@ public class SegmentNomme extends Segment implements Nomme{
 		System.out.println(name + ToString());
 	}
 	
+	@Override
 	public void setNom(String name) 
 	{
 		this.name = name;

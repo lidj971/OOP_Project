@@ -1,6 +1,8 @@
 package figures;
 
-public class Point extends Figure{
+import java.io.Serializable;
+
+public class Point extends Figure implements Cloneable,Serializable{
 
 	private double x;
 	private double y;
@@ -60,5 +62,13 @@ public class Point extends Figure{
 	public boolean Equals(Point point) {
 		// TODO Auto-generated method stub
 		return (point.getX() == this.getX() && point.getY() == this.getY());
-	}  
+	} 
+	
+	public Point clone() 
+	{
+		Point p = null;
+		try { p = (Point)super.clone();}
+		catch(CloneNotSupportedException e){}
+		return p;
+	}
 }

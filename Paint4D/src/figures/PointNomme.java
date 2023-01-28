@@ -27,6 +27,7 @@ public class PointNomme extends Point implements Nomme{
 		System.out.println(name + ToString());
 	}
 	
+	@Override
 	public void setNom(String name) 
 	{
 		this.name = name;
