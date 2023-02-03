@@ -63,9 +63,7 @@ public class Segment extends Figure implements Cloneable,Serializable{
 	
 	public Segment clone() 
 	{
-		Segment s = null;
-		try { s = (Segment)super.clone();}
-		catch(CloneNotSupportedException e){}
+		Segment s = (Segment)super.clone();
 		return s;
 	}
 }

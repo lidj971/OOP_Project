@@ -1,10 +1,18 @@
 package figures;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		testCercle();
+		testStructures();
 	}
 	
 	public static void testPoint() 
@@ -108,6 +116,65 @@ public class Test {
 		PointNomme p2 = new PointNomme(1,1,"B");
 		Segment s = new Segment(p1,p2);
 		s.Afficher();
+	}
+	
+	public static void testSerialization() 
+	{
+		Point p = new Point(2,2);
+		Segment s = new Segment(new Point(2,2),new Point (0,0));
+		Cercle c = new Cercle(s.getP1(),s.getP2());
+		ObjectOutputStream out = null;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream("SerializationTest"));
+			out.writeObject(p);
+			out.writeObject(s);
+			out.writeObject(c);
+			out.flush();
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Point p1 = null;
+		Segment s1 = null;
+		Cercle c1 = null;
+		ObjectInputStream in = null;
+		try {
+			in = new ObjectInputStream(new FileInputStream("SerializationTest"));
+			p1 = (Point)in.readObject();
+			s1 = (Segment)in.readObject();
+			c1 = (Cercle)in.readObject();
+			in.close();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		p1.Afficher();
+		s1.Afficher();
+		c1.Afficher();
+	}
+	
+	public static void testStructures() 
+	{
+		ArrayList<Figure> figTab = new ArrayList<Figure>();
+		figTab.add(new Point(0,0));
+		figTab.add(new PointNomme(1,1,"NOMME"));
+		figTab.add(new Segment(new Point(0,0),new Point(3,3)));
+		figTab.add(new Cercle(new Point(0,0),new Point(3,3)));
+		for (Figure fig: figTab){
+			fig.Afficher();
+			fig.Translater(2,2);
+			fig.Afficher();
+			fig.getCentre().Afficher();
+		}
 	}
 	
 	public static void printEquals(String f1str,String f2str,boolean equal) 

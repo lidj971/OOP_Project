@@ -66,9 +66,7 @@ public class Point extends Figure implements Cloneable,Serializable{
 	
 	public Point clone() 
 	{
-		Point p = null;
-		try { p = (Point)super.clone();}
-		catch(CloneNotSupportedException e){}
+		Point p = (Point)super.clone();
 		return p;
 	}
 }

@@ -61,9 +61,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	
 	public Cercle clone() 
 	{
-		Cercle c = null;
-		try { c = (Cercle)super.clone();}
-		catch(CloneNotSupportedException e){}
+		Cercle c = (Cercle)super.clone();
 		return c;
 	}
 
