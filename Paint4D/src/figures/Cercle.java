@@ -41,6 +41,11 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 		}
 		System.out.println("Erreur : rayon <= 0");
 	}
+	
+	public void setCentre(Point p) 
+	{
+		centre = p;
+	}
 
 	@Override
 	public String ToString() {
@@ -62,6 +67,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	public Cercle clone() 
 	{
 		Cercle c = (Cercle)super.clone();
+		c.setCentre(getCentre().clone());
 		return c;
 	}
 

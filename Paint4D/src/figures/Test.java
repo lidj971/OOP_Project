@@ -12,7 +12,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		testStructures();
+		testPolygone();
 	}
 	
 	public static void testPoint() 
@@ -91,6 +91,38 @@ public class Test {
 		c1.Afficher();
 		System.out.print("Clone = ");
 		c1Bis.Afficher();
+	}
+	
+	public static void testPolygone() 
+	{
+		ArrayList<Point> pList = new ArrayList<Point>();
+		pList.add(new Point(0,0));
+		pList.add(new Point(1,3));
+		pList.add(new Point(3,5));
+		pList.add(new Point(4,1));
+		
+		ArrayList<Point> pList2 = new ArrayList<Point>();
+		pList2.add(new Point(1,3));
+		pList2.add(new Point(3,5));
+		pList2.add(new Point(0,0));
+		pList2.add(new Point(4,1));
+		
+		Polygone poly1 = new Polygone(pList);
+		Polygone poly2 = new Polygone(pList2);
+		printEquals(poly1.ToString(),poly2.ToString(),poly1.Equals(poly2));
+		
+		poly1.add(new Point (0,0));
+		printEquals(poly1.ToString(),poly2.ToString(),poly1.Equals(poly2));
+		
+		Polygone polyClone = poly1.clone();
+		if(polyClone == null) 
+		{
+			System.out.println("Cloning Error");
+			return;
+		}
+		
+		polyClone.Translater(2, 3);
+		printEquals(poly1.ToString(),polyClone.ToString(),poly1.Equals(polyClone));
 	}
 	
 	public static void testPointNomme() 
