@@ -1,8 +1,8 @@
 package figures;
 
-
-public abstract class Figure implements Cloneable {
-	abstract public void Translater(double x,double y);
+    public abstract class Figure implements Cloneable {
+	
+    abstract public void Translater(double x,double y);
 	
 	abstract public void Afficher();
 	
