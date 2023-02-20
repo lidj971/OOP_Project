@@ -62,9 +62,8 @@ public class Test {
 			System.out.println("Cloning Error");
 			return;
 		}
-		s1.Afficher();
-		System.out.print("Clone = ");
-		s1Bis.Afficher();
+		s1Bis.Translater(1, 1);
+		printEquals(s1.ToString(), s1Bis.ToString(), s1.Equals(s1Bis));
 	}
 	
 	public static void testCercle() 
@@ -88,30 +87,30 @@ public class Test {
 			System.out.println("Cloning Error");
 			return;
 		}
-		c1.Afficher();
-		System.out.print("Clone = ");
-		c1Bis.Afficher();
+		c1Bis.Translater(1, 1);
+		printEquals(c1.ToString(),c1Bis.ToString(),c1.Equals(c1Bis));
+		
 	}
 	
 	public static void testPolygone() 
 	{
-		ArrayList<Point> pList = new ArrayList<Point>();
-		pList.add(new Point(0,0));
-		pList.add(new Point(1,3));
-		pList.add(new Point(3,5));
-		pList.add(new Point(4,1));
+		Polygone poly1 = new Polygone();
+		poly1.add(new Point(0,0));
+		poly1.add(new Point(1,3));
+		poly1.add(new Point(3,5));
+		poly1.add(new Point(4,1));
 		
-		ArrayList<Point> pList2 = new ArrayList<Point>();
-		pList2.add(new Point(1,3));
-		pList2.add(new Point(3,5));
-		pList2.add(new Point(0,0));
-		pList2.add(new Point(4,1));
+		Polygone poly2 = new Polygone();
+		poly2.add(new Point(1,3));
+		poly2.add(new Point(3,5));
+		poly2.add(new Point(0,0));
+		poly2.add(new Point(4,1));
 		
-		Polygone poly1 = new Polygone(pList);
-		Polygone poly2 = new Polygone(pList2);
+		
 		printEquals(poly1.ToString(),poly2.ToString(),poly1.Equals(poly2));
 		
 		poly1.add(new Point (0,0));
+		
 		printEquals(poly1.ToString(),poly2.ToString(),poly1.Equals(poly2));
 		
 		Polygone polyClone = poly1.clone();

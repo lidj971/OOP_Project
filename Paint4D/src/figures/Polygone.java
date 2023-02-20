@@ -8,18 +8,24 @@ public class Polygone extends Figure{
 	
 	public Polygone() 
 	{
-		sommets = new ArrayList<Point>();;
+		this.sommets = new ArrayList<Point>();;
 	}
 	
 	public ArrayList<Point> getSommets() 
 	{
-		return sommets;
+		return this.sommets;
+	}
+	
+	public void setSommets(ArrayList<Point> sommets)
+	{
+		this.sommets.clear();
+		this.sommets.addAll(sommets);
 	}
 	
 	@Override
 	public void Translater(double x, double y) {
 		// TODO Auto-generated method stub
-		for(Point p:getSommets()) 
+		for(Point p:this.getSommets()) 
 		{
 			p.Translater(x, y);
 		}
@@ -62,9 +68,10 @@ public class Polygone extends Figure{
 	public Polygone clone() 
 	{
 		Polygone pClone = (Polygone)super.clone();
-		for(int i = 0;i < getSommets().size();i++) 
+		pClone.sommets = new ArrayList<Point>();
+		for(Point p:this.getSommets()) 
 		{
-		    pClone.getSommets().set(i,getSommets().get(i).clone());
+			pClone.add(p.clone());
 		}
 		return pClone;
 	}
