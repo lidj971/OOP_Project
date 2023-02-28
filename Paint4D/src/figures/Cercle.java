@@ -33,13 +33,13 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 		return rayon;
 	}
 
-	public void setRayon(double rayon) {
-		if(rayon > 0) 
+	public void setRayon(double rayon)throws NegRadiusException {
+		if(rayon <= 0) 
 		{
-			this.rayon = rayon;
-			return;
+			throw new NegRadiusException(rayon);
 		}
-		System.out.println("Erreur : rayon <= 0");
+		this.rayon = rayon;
+		return;
 	}
 	
 	public void setCentre(Point p) 

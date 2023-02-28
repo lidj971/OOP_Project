@@ -91,34 +91,45 @@ public class Polygone extends Figure{
 		Point p1 = this.getSommets().get(0);
 		Point p2 = poly.getSommets().get(0);
 		int i2 = 0;
-		while(!(i2 < n && p1.Equals(p2))) 
+		while(i2 < n && !p1.Equals(p2)) 
 		{
 			p2 = poly.getSommets().get(++i2);
 		}
 		if(i2 == n)return false;
-		int i1 = 0;
-		p1 = this.getSommets().get(++i1);
-		p2 = this.getSommets().get((i2+1)%n);
+		int i1 = 1;
+		p1 = this.getSommets().get(i1);
+		p2 = this.getSommets().get((++i2)%n);
 		if(p1.Equals(p2)) 
 		{
+			
 			while(i1 < n) 
 			{
-				p1 = this.getSommets().get((i1+1)%n);
-				p2 = poly.getSommets().get((i2+1)%n);
-				if(!p1.Equals(p2))return false;
+				p1 = this.getSommets().get((++i1)%n);
+				p2 = poly.getSommets().get((++i2)%n);
+				if(!p1.Equals(p2)) 
+				{
+					return false;
+				}
 			}
+			
 			return true;
 		}else 
 		{
-			p2 = poly.getSommets().get((n+i2-1)%n);
+			i2 -= 2;
+			p2 = poly.getSommets().get((n + i2)%n);
+			
 			if(!p1.Equals(p2)) 
 			{
 				return false;
 			}
+			p1.Afficher();
+			p2.Afficher();
 			while(i1 < n)
 			{
-				p1 = this.getSommets().get((i1++)%n);
-				p2 = poly.getSommets().get((i2-- + n)%n);
+				p1 = this.getSommets().get((++i1)%n);
+				p2 = poly.getSommets().get((--i2 + n)%n);
+				p1.Afficher();
+				p2.Afficher();
 				if(!p1.equals(p2)) 
 				{
 					return false;

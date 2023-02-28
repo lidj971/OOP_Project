@@ -74,9 +74,21 @@ public class Test {
 		c1.Afficher();
 		Cercle c2 = new Cercle(new Point(-2,2),new Point(5,-6));
 		c2.Afficher();
-		c2.setRayon(2);
+		try {
+			c2.setRayon(2);
+		} catch (NegRadiusException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Le rayon choisie est de : " + e.radius);
+			System.out.println(e.radius  + " <= 0 par consequent le rayon est invalide");
+		}
 		c2.Afficher();
-		c2.setRayon(-2);
+		try {
+			c2.setRayon(-2);
+		} catch (NegRadiusException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Le rayon choisie est de : " + e.radius);
+			System.out.println(e.radius  + " <= 0 par consequent le rayon est invalide");
+		}
 		c2.Afficher();
 		Cercle c3 = new Cercle(new Point(2,2), 5);
 		printEquals(c1.ToString(),c2.ToString(),c1.Equals(c2));
@@ -109,7 +121,7 @@ public class Test {
 		
 		printEquals(poly1.ToString(),poly2.ToString(),poly1.Equals(poly2));
 		
-		poly1.add(new Point (0,0));
+		poly1.add(new Point (6,3));
 		
 		printEquals(poly1.ToString(),poly2.ToString(),poly1.Equals(poly2));
 		
@@ -120,8 +132,16 @@ public class Test {
 			return;
 		}
 		
-		polyClone.Translater(2, 3);
 		printEquals(poly1.ToString(),polyClone.ToString(),poly1.Equals(polyClone));
+		
+		Polygone poly3 = new Polygone();
+		poly3.add(poly1.getSommets().get(2));
+		poly3.add(poly1.getSommets().get(1));
+		poly3.add(poly1.getSommets().get(0));
+		poly3.add(poly1.getSommets().get(4));
+		poly3.add(poly1.getSommets().get(3));
+		
+		printEquals(poly1.ToString(),poly3.ToString(),poly1.Equals(poly3));
 	}
 	
 	public static void testPointNomme() 
