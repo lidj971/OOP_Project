@@ -1,4 +1,5 @@
 package figures;
+import java.awt.Graphics;
 import java.io.Serializable;
 
 public class Segment extends Figure implements Cloneable,Serializable{
@@ -49,6 +50,14 @@ public class Segment extends Figure implements Cloneable,Serializable{
 	public Point getCentre() 
 	{
 		return new Point((getP1().getX() + getP2().getX()) / 2,(getP1().getY() + getP2().getY()) / 2);
+	}
+	
+	@Override
+	public void Paint(Graphics gc) 
+	{
+		this.p1.Paint(gc);
+		this.p2.Paint(gc);
+		gc.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
 	}
 	
 	public double getLongueur() 

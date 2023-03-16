@@ -1,4 +1,6 @@
 package figures;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.io.Serializable;
 
 
@@ -29,6 +31,39 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 		System.out.println(ToString());
 	}
 
+
+	@Override
+	public String ToString() {
+		// TODO Auto-generated method stub
+		return "Centre" + getCentre().ToString() + " r = " + rayon;
+	}
+
+	@Override
+	public Point getCentre() {
+		// TODO Auto-generated method stub
+		return centre;
+	}
+	
+	@Override
+	public void Paint(Graphics gc) 
+	{
+		gc.setColor(Color.BLACK);
+		gc.drawOval((int)this.getCentre().getX(),(int)this.getCentre().getY(),(int)this.getRayon(),(int)this.getRayon());
+	}
+	
+	public boolean Equals(Cercle cercle) 
+	{
+		return getRayon() == cercle.getRayon() && cercle.getCentre().Equals(getCentre());
+	}
+	
+	public Cercle clone() 
+	{
+		Cercle c = (Cercle)super.clone();
+		c.setCentre(getCentre().clone());
+		return c;
+	}
+
+	
 	public double getRayon() {
 		return rayon;
 	}
@@ -46,29 +81,4 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	{
 		centre = p;
 	}
-
-	@Override
-	public String ToString() {
-		// TODO Auto-generated method stub
-		return "Centre" + getCentre().ToString() + " r = " + rayon;
-	}
-
-	@Override
-	public Point getCentre() {
-		// TODO Auto-generated method stub
-		return centre;
-	}
-	
-	public boolean Equals(Cercle cercle) 
-	{
-		return getRayon() == cercle.getRayon() && cercle.getCentre().Equals(getCentre());
-	}
-	
-	public Cercle clone() 
-	{
-		Cercle c = (Cercle)super.clone();
-		c.setCentre(getCentre().clone());
-		return c;
-	}
-
 }

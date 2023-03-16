@@ -1,6 +1,8 @@
 package figures;
 
-    public abstract class Figure implements Cloneable {
+import java.awt.Graphics;
+
+public abstract class Figure implements Cloneable {
 	
     abstract public void Translater(double x,double y);
 	
@@ -9,6 +11,8 @@ package figures;
 	abstract public String ToString();
 	
 	abstract public Point getCentre();
+	
+	abstract public void Paint(Graphics gc);
 	
 	public Figure clone() 
 	{

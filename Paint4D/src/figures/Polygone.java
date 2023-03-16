@@ -65,6 +65,19 @@ public class Polygone extends Figure{
 		return new Point(x/size,y/size);
 	}
 	
+	@Override
+	public void Paint(Graphics gc) 
+	{
+		int n = sommets.size();
+		Point p2 = sommets.get(0);
+		for(int i = 0;i < sommets.size();i++) 
+		{
+			Point p1 = p2;
+			p2 = sommets.get((i+1)%n);
+			gc.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
+		}
+	}
+	
 	public Polygone clone() 
 	{
 		Polygone pClone = (Polygone)super.clone();
@@ -122,14 +135,10 @@ public class Polygone extends Figure{
 			{
 				return false;
 			}
-			p1.Afficher();
-			p2.Afficher();
 			while(i1 < n)
 			{
 				p1 = this.getSommets().get((++i1)%n);
 				p2 = poly.getSommets().get((--i2 + n)%n);
-				p1.Afficher();
-				p2.Afficher();
 				if(!p1.equals(p2)) 
 				{
 					return false;
@@ -138,17 +147,5 @@ public class Polygone extends Figure{
 			}
 		}
 		return true;
-	}
-	
-	public void Paint(Graphics gc) 
-	{
-		int n = sommets.size();
-		Point p2 = sommets.get(0);
-		for(int i = 0;i < sommets.size();i++) 
-		{
-			Point p1 = p2;
-			p2 = sommets.get((i+1)%n);
-			gc.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
-		}
 	}
 }

@@ -1,5 +1,6 @@
 package figures;
 
+import java.awt.Graphics;
 import java.io.Serializable;
 
 public class Point extends Figure implements Cloneable,Serializable{
@@ -57,6 +58,12 @@ public class Point extends Figure implements Cloneable,Serializable{
 	public Point getCentre() {
 		// TODO Auto-generated method stub
 		return this;
+	}
+	
+	@Override
+	public void Paint(Graphics gc) 
+	{
+		gc.fillOval((int)this.getX(), (int)this.getY(),7,7);
 	}
 
 	public boolean Equals(Point point) {
