@@ -48,7 +48,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	public void Paint(Graphics gc) 
 	{
 		this.getCentre().Paint(gc);
-		gc.drawOval((int)this.getCentre().getX(),(int)this.getCentre().getY(),(int)this.getRayon(),(int)this.getRayon());
+		gc.drawOval((int)(this.getCentre().getX() - (this.rayon/2)),(int)(this.getCentre().getY() - (this.rayon/2)),(int)this.getRayon(),(int)this.getRayon());
 	}
 	
 	public boolean Equals(Cercle cercle) 
@@ -68,7 +68,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 		return rayon;
 	}
 
-	public void setRayon(double rayon)throws NegRadiusException {
+	public void setRayon(double rayon) throws NegRadiusException {
 		if(rayon <= 0) 
 		{
 			throw new NegRadiusException(rayon);
