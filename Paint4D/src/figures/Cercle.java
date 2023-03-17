@@ -47,7 +47,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	@Override
 	public void Paint(Graphics gc) 
 	{
-		gc.setColor(Color.BLACK);
+		this.getCentre().Paint(gc);
 		gc.drawOval((int)this.getCentre().getX(),(int)this.getCentre().getY(),(int)this.getRayon(),(int)this.getRayon());
 	}
 	

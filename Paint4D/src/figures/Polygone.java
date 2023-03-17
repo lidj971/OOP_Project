@@ -72,6 +72,7 @@ public class Polygone extends Figure{
 		Point p2 = sommets.get(0);
 		for(int i = 0;i < sommets.size();i++) 
 		{
+			sommets.get(i).Paint(gc);
 			Point p1 = p2;
 			p2 = sommets.get((i+1)%n);
 			gc.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());

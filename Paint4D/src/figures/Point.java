@@ -63,7 +63,9 @@ public class Point extends Figure implements Cloneable,Serializable{
 	@Override
 	public void Paint(Graphics gc) 
 	{
-		gc.fillOval((int)this.getX(), (int)this.getY(),7,7);
+		int taille = 4;
+		gc.drawLine((int)getX() - taille, (int)getY(), (int)getX() + taille, (int)getY());
+		gc.drawLine((int)getX(), (int)getY() - taille, (int)getX(), (int)getY() + taille);
 	}
 
 	public boolean Equals(Point point) {

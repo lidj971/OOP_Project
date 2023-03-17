@@ -7,43 +7,62 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 
-public class Editeur extends JPanel {
+public class Editeur extends JPanel implements MouseListener,MouseMotionListener{
 
-	public ArrayList<Figure> figures;
+	public static ArrayList<Figure> figures;
+	public static String currentFig = "";
+	
 	
 	public Editeur() 
 	{
 		super();
 		repaint();
+		figures = new ArrayList<Figure>();
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		//Frame
 		JFrame frame = new JFrame();
 		frame.setSize(480, 480);
 		frame.setTitle("Paint4D");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container contenu = frame.getContentPane();
+		//Menu
+		JMenuBar menu = CreateMenuBar();
+		frame.setJMenuBar(menu);
+		
+		//Zone de dessin
 		Editeur editeur = new Editeur();
-		editeur.setBackground(Color.white);
-		JButton initFigures = new JButton("Initialiser Figures");
-		initFigures.addActionListener(editeur.new InitialiserFigures(editeur));
-		JButton clearFigures = new JButton("Clear");
-		clearFigures.addActionListener(editeur.new ViderListe(editeur));
-		editeur.add(initFigures);
-		editeur.add(clearFigures);
-		editeur.figures = new ArrayList<Figure>();
-		editeur.figures.add(new Point(10,10));
-		//editeur.figures.add(new Segment(new Point(40,40),new Point(80,80)));
-		editeur.figures.add(new Cercle(new Point(100,100),50));
-		Polygone poly = new Polygone();
-		poly.add(new Point(10,10));
-		poly.add(new Point(50,10));
-		poly.add(new Point(10,50));
-		poly.add(new Point(50,50));
-		editeur.figures.add(poly);
+		editeur.setBorder(BorderFactory.createTitledBorder("Plan"));
+		//JButton initFigures = new JButton("Initialiser Figures");
+		//initFigures.addActionListener(editeur.new InitialiserFigures(editeur));
+		//JButton clearFigures = new JButton("Clear");
+		//clearFigures.addActionListener(editeur.new ViderListe(editeur));
+		//editeur.add(initFigures);
+		//editeur.add(clearFigures);
+		
+		//Componenet
+		JPanel component = new JPanel();
+		component.setBorder(BorderFactory.createTitledBorder("Component"));
+		component.setPreferredSize(new Dimension(200,480));
+		
+		contenu.add(component,BorderLayout.WEST);
 		contenu.add(editeur);
 		frame.setVisible(true);
+		frame.addKeyListener(new KeyAdapter() 
+		{
+			public void keyPressed(KeyEvent e) 
+			{
+				int keyCode = e.getKeyCode();
+				if(keyCode == KeyEvent.VK_ESCAPE && currentFig.equals("Polygone")) 
+				{
+					currentFig = "";
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -57,9 +76,46 @@ public class Editeur extends JPanel {
 		}
 	}
 	
-	public void CreateMenuBar() 
+	public static JMenuBar CreateMenuBar() 
 	{
+		JMenuBar menu = new JMenuBar();
+
+		JMenu adminMenu = new JMenu("Administration");
+		menu.add(adminMenu);
 		
+		JMenu createMenu = new JMenu("Creer");	
+		
+		JMenuItem createPoint = new JMenuItem("Point");
+		createPoint.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
+			currentFig = "Point";
+			System.out.println(currentFig); } });
+		createMenu.add(createPoint);
+		
+		JMenuItem createSegment = new JMenuItem("Segment");
+		createSegment.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
+			currentFig = "Segment"; } });
+		createMenu.add(createSegment);
+		
+		JMenuItem createCercle = new JMenuItem("Cercle");
+		createCercle.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
+			currentFig = "Cercle"; } });
+		createMenu.add(createCercle);
+		
+		JMenuItem createPolygone = new JMenuItem("Polygone");
+		createPolygone.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
+			currentFig = "Polygone";
+			Polygone poly = new Polygone();
+			figures.add(poly); } });
+		createMenu.add(createPolygone);
+		menu.add(createMenu);
+		
+		JMenu modMenu = new JMenu("Modifier");
+		menu.add(modMenu);
+		
+		JMenu calcMenu = new JMenu("Calculer");
+		menu.add(calcMenu);
+		
+		return menu;
 	}
 	
 	public class InitialiserFigures implements ActionListener{
@@ -98,4 +154,88 @@ public class Editeur extends JPanel {
 		
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(currentFig.equals("Point")) 
+		{
+			Point p = new Point(e.getX(),e.getY());
+			figures.add(p);
+			currentFig = "";
+			this.repaint();
+		}else if(currentFig.equals("Polygone") && figures.get(figures.size() - 1) instanceof Polygone)
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			Polygone poly = (Polygone)figures.get(figures.size() - 1);
+			poly.add(mousePos);
+			this.repaint();
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(currentFig.equals("Segment")) 
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			Segment s = new Segment(mousePos,mousePos);
+			figures.add(s);
+			this.repaint();
+		}else if(currentFig.equals("Cercle")) 
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			Cercle c = new Cercle(mousePos,0);
+			figures.add(c);
+			this.repaint();
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(currentFig.equals("Cercle") || currentFig.equals("Segment")) 
+		{
+			currentFig = "";
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(currentFig.equals("Segment") && figures.get(figures.size() - 1) instanceof Segment) 
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			Segment s = (Segment)figures.get(figures.size() - 1);
+			s.setP2(mousePos);
+			this.repaint();
+		}else if(currentFig.equals("Cercle") && figures.get(figures.size() - 1) instanceof Cercle) 
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			Cercle s = (Cercle)figures.get(figures.size() - 1);
+			try {
+				s.setRayon(s.getCentre().Distance(mousePos));
+			} catch (NegRadiusException e1) {
+				// TODO Auto-generated catch block
+				currentFig = "";
+			}
+			this.repaint();
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
