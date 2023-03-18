@@ -77,4 +77,13 @@ public class Segment extends Figure implements Cloneable,Serializable{
 		s.setP2(getP2().clone());
 		return s;
 	}
+	
+	public boolean isTouching(Point p3) 
+	{
+		Segment s2 = new Segment(this.getP1(),p3);
+		double x = (p3.getX() - this.getP1().getX()) / (this.getP2().getX() - this.getP1().getX());
+		double y = (p3.getY() - this.getP1().getY()) / (this.getP2().getY() - this.getP1().getY());
+		return (x == y && x >= 0 && x <= 1);
+		
+	}
 }

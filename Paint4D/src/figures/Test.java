@@ -12,7 +12,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		//testPolygone();
+		testSegment();
 	}
 	
 	public static void testPoint() 
@@ -62,8 +62,9 @@ public class Test {
 			System.out.println("Cloning Error");
 			return;
 		}
-		s1Bis.Translater(1, 1);
-		printEquals(s1.ToString(), s1Bis.ToString(), s1.Equals(s1Bis));
+		s1Bis.getP2().Translater(1, 1);
+		System.out.println(s1.isTouching(s1Bis.getP2()));
+		//printEquals(s1.ToString(), s1Bis.ToString(), s1.Equals(s1Bis));
 	}
 	
 	public static void testCercle() 

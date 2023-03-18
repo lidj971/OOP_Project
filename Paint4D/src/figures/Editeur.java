@@ -11,6 +11,7 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 
 	public static ArrayList<Figure> figures;
 	public static String currentFig = "";
+	public static String currentState = "";
 	
 	
 	public Editeur() 
@@ -39,30 +40,33 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		editeur.setBorder(BorderFactory.createTitledBorder("Plan"));
 		//JButton initFigures = new JButton("Initialiser Figures");
 		//initFigures.addActionListener(editeur.new InitialiserFigures(editeur));
-		//JButton clearFigures = new JButton("Clear");
-		//clearFigures.addActionListener(editeur.new ViderListe(editeur));
 		//editeur.add(initFigures);
-		//editeur.add(clearFigures);
+		JButton clearFigures = new JButton("Clear");
+		clearFigures.addActionListener(editeur.new ViderListe(editeur));
+		editeur.add(clearFigures,BorderLayout.EAST);
 		
 		//Componenet
 		JPanel component = new JPanel();
 		component.setBorder(BorderFactory.createTitledBorder("Component"));
 		component.setPreferredSize(new Dimension(200,480));
 		
+		
 		contenu.add(component,BorderLayout.WEST);
 		contenu.add(editeur);
-		frame.setVisible(true);
 		frame.addKeyListener(new KeyAdapter() 
 		{
 			public void keyPressed(KeyEvent e) 
 			{
 				int keyCode = e.getKeyCode();
+				System.out.println(e.getKeyChar());
 				if(keyCode == KeyEvent.VK_ESCAPE && currentFig.equals("Polygone")) 
 				{
 					currentFig = "";
 				}
 			}
 		});
+		frame.setVisible(true);
+		
 	}
 	
 	@Override
@@ -88,22 +92,25 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		JMenuItem createPoint = new JMenuItem("Point");
 		createPoint.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
 			currentFig = "Point";
-			System.out.println(currentFig); } });
+			currentState = "Creer";} });
 		createMenu.add(createPoint);
 		
 		JMenuItem createSegment = new JMenuItem("Segment");
 		createSegment.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentFig = "Segment"; } });
+			currentFig = "Segment"; 
+			currentState = "Creer"; } });
 		createMenu.add(createSegment);
 		
 		JMenuItem createCercle = new JMenuItem("Cercle");
 		createCercle.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentFig = "Cercle"; } });
+			currentFig = "Cercle"; 
+			currentState = "Creer";} });
 		createMenu.add(createCercle);
 		
 		JMenuItem createPolygone = new JMenuItem("Polygone");
 		createPolygone.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
 			currentFig = "Polygone";
+			currentState = "Creer";
 			Polygone poly = new Polygone();
 			figures.add(poly); } });
 		createMenu.add(createPolygone);
@@ -111,6 +118,11 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		JMenu modMenu = new JMenu("Modifier");
 		menu.add(modMenu);
+		
+		JMenuItem select = new JMenuItem("Selectionner");
+		select.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
+			currentState = "Selecting"; } });
+		modMenu.add(select);
 		
 		JMenu calcMenu = new JMenu("Calculer");
 		menu.add(calcMenu);
@@ -149,7 +161,7 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			editeur.figures.clear();
-			System.out.println(editeur.figures);
+			editeur.repaint();
 		}
 		
 	}
@@ -175,19 +187,50 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(currentFig.equals("Segment")) 
+		if(currentState.equals("Creer")) 
 		{
-			Point mousePos = new Point(e.getX(),e.getY());
-			Segment s = new Segment(mousePos,mousePos);
-			figures.add(s);
-			this.repaint();
-		}else if(currentFig.equals("Cercle")) 
-		{
-			Point mousePos = new Point(e.getX(),e.getY());
-			Cercle c = new Cercle(mousePos,0);
-			figures.add(c);
-			this.repaint();
+			if(currentFig.equals("Segment")) 
+			{
+				Point mousePos = new Point(e.getX(),e.getY());
+				Segment s = new Segment(mousePos,mousePos);
+				figures.add(s);
+				this.repaint();
+			}else if(currentFig.equals("Cercle")) 
+			{
+				Point mousePos = new Point(e.getX(),e.getY());
+				Cercle c = new Cercle(mousePos,0);
+				figures.add(c);
+				this.repaint();
+			}
 		}
+		
+		else if(currentState.equals("Selecting")) 
+		{
+			
+			Point mousePos = new Point(e.getX(),e.getY());
+			if(figures.get(figures.size() - 1) instanceof Segment) 
+			{
+				Segment s = (Segment)figures.get(figures.size() - 1);
+				if(s.isTouching(mousePos)) 
+				{
+					System.out.println("ldkf");
+				}
+			}
+			/*Figure fig = null;
+			int i = 0;
+			Point mousePos = new Point(e.getX(),e.getY());
+			while(fig == null) 
+			{
+				if(figures.get(i).getCentre().Equals(mousePos)) 
+				{
+					currentState = "Translating";
+					fig = figures.get(i);
+					figures.remove(i);
+					figures.add(fig);
+				}
+			}*/
+		}
+		
 	}
 
 	@Override
@@ -197,11 +240,15 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		{
 			currentFig = "";
 		}
+		if(currentState.equals("Translating"))
+		{
+			currentState = "Selecting";
+		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -222,14 +269,19 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		}else if(currentFig.equals("Cercle") && figures.get(figures.size() - 1) instanceof Cercle) 
 		{
 			Point mousePos = new Point(e.getX(),e.getY());
-			Cercle s = (Cercle)figures.get(figures.size() - 1);
+			Cercle c = (Cercle)figures.get(figures.size() - 1);
 			try {
-				s.setRayon(s.getCentre().Distance(mousePos));
+				c.setRayon(c.getCentre().Distance(mousePos)*2);
 			} catch (NegRadiusException e1) {
 				// TODO Auto-generated catch block
 				currentFig = "";
 			}
 			this.repaint();
+		}
+		
+		if(currentState.equals("Translating")) 
+		{
+			
 		}
 	}
 
