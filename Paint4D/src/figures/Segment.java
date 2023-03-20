@@ -1,4 +1,5 @@
 package figures;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
 
@@ -57,7 +58,13 @@ public class Segment extends Figure implements Cloneable,Serializable{
 	{
 		this.p1.Paint(gc);
 		this.p2.Paint(gc);
+		Color currentColor = gc.getColor();
+		if(isSelected()) 
+		{
+			gc.setColor(new Color(0, 102, 255));
+		}
 		gc.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
+		gc.setColor(currentColor);
 	}
 	
 	public double getLongueur() 
@@ -77,6 +84,7 @@ public class Segment extends Figure implements Cloneable,Serializable{
 		s.setP2(getP2().clone());
 		return s;
 	}
+
 	
 	public boolean isTouching(Point p3) 
 	{
@@ -84,6 +92,35 @@ public class Segment extends Figure implements Cloneable,Serializable{
 		double x = (p3.getX() - this.getP1().getX()) / (this.getP2().getX() - this.getP1().getX());
 		double y = (p3.getY() - this.getP1().getY()) / (this.getP2().getY() - this.getP1().getY());
 		return (x == y && x >= 0 && x <= 1);
-		
 	}
+		
+
+
+	@Override
+	public Point CloseTo(Point p) {
+		// TODO Auto-generated method stub
+		Point closestPoint = p1.CloseTo(p);
+		if(closestPoint != null) 
+		{
+			return closestPoint;
+		}
+		closestPoint = p2.CloseTo(p);
+		return closestPoint;
+
+	}
+
+	@Override
+	public boolean IsInside(Rectangle rect) {
+		// TODO Auto-generated method stub
+		return p1.IsInside(rect) && p2.IsInside(rect);
+	}
+	
+	@Override
+	public void setSelected(boolean selected) 
+	{
+		super.setSelected(selected);
+		p1.setSelected(selected);
+		p2.setSelected(selected);
+	}
+
 }

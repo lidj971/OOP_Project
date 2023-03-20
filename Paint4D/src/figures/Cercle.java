@@ -48,7 +48,13 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	public void Paint(Graphics gc) 
 	{
 		this.getCentre().Paint(gc);
+		Color currentColor = gc.getColor();
+		if(isSelected()) 
+		{
+			gc.setColor(new Color(0, 102, 255));
+		}
 		gc.drawOval((int)(this.getCentre().getX() - (this.rayon/2)),(int)(this.getCentre().getY() - (this.rayon/2)),(int)this.getRayon(),(int)this.getRayon());
+		gc.setColor(currentColor);
 	}
 	
 	public boolean Equals(Cercle cercle) 
@@ -69,7 +75,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	}
 
 	public void setRayon(double rayon) throws NegRadiusException {
-		if(rayon <= 0) 
+		if(rayon < 0) 
 		{
 			throw new NegRadiusException(rayon);
 		}
@@ -81,4 +87,28 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 	{
 		centre = p;
 	}
+
+	@Override
+	public Point CloseTo(Point p) {
+		// TODO Auto-generated method stub
+		if(p.Distance(this.getCentre()) <= threshold) 
+		{
+			return getCentre();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean IsInside(Rectangle rect) {
+		// TODO Auto-generated method stub
+		return centre.IsInside(rect);
+	}
+	
+	@Override
+	public void setSelected(boolean selected) 
+	{
+		super.setSelected(selected);
+		centre.setSelected(selected);
+	}
+	
 }

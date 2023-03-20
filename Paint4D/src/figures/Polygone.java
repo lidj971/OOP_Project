@@ -1,6 +1,7 @@
 package figures;
-import java.util.ArrayList;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Polygone extends Figure{
 
@@ -68,6 +69,7 @@ public class Polygone extends Figure{
 	@Override
 	public void Paint(Graphics gc) 
 	{
+		Color currentColor = gc.getColor();		
 		int n = sommets.size();
 		Point p2 = sommets.get(0);
 		for(int i = 0;i < sommets.size();i++) 
@@ -75,8 +77,14 @@ public class Polygone extends Figure{
 			sommets.get(i).Paint(gc);
 			Point p1 = p2;
 			p2 = sommets.get((i+1)%n);
+			if(isSelected()) 
+			{
+				gc.setColor(new Color(0, 102, 255));
+			}
 			gc.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
 		}
+		
+		gc.setColor(currentColor);
 	}
 	
 	public Polygone clone() 
@@ -148,5 +156,39 @@ public class Polygone extends Figure{
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Point CloseTo(Point p) {
+		// TODO Auto-generated method stub
+		int i = 0;
+		Point closestPoint = this.getSommets().get(i++).CloseTo(p);
+		while(closestPoint == null && i < this.getSommets().size()) 
+		{
+			closestPoint = this.getSommets().get(i++).CloseTo(p);
+		}
+		return closestPoint;
+	}
+
+	@Override
+	public boolean IsInside(Rectangle rect) {
+		// TODO Auto-generated method stub
+		for(Point p:sommets) 
+		{
+			if(!p.IsInside(rect)) 
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	@Override
+	public void setSelected(boolean selected) 
+	{
+		super.setSelected(selected);
+		for(Point p:sommets) 
+		{
+			p.setSelected(selected);
+		}
 	}
 }
