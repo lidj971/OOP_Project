@@ -10,25 +10,35 @@ import javax.swing.*;
 
 public class Editeur extends JPanel implements MouseListener,MouseMotionListener,MouseWheelListener{
 
-	public static ArrayList<Figure> figures;
-	public static ArrayList<Figure> selectedFigures;
-	public static String currentFig = "";
-	public static String currentState = "";
-	public static Point selectedPoint = null;
-	public static Rectangle selectZone;
-	private double zoomFactor = 1;
-	private double prevZoomFactor = 1;
-	private boolean zoomer;
+	public ArrayList<Figure> figures;
+	//private double zoomFactor = 1;
+	//private double prevZoomFactor = 1;
+	//private boolean zoomer;
+	
+	public static StateMachine stateMachine;
+	
+	public static CreateState createState;
+	public static PointSelectState pointSelectState;
+	public static ZoneSelectState zoneSelectState;
 	
 	public Editeur() 
 	{
 		super();
+		
 		repaint();
+		
 		figures = new ArrayList<Figure>();
-		selectedFigures = new ArrayList<Figure>();
+		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addMouseWheelListener(this);
+		
+		createState = new CreateState(this);
+		pointSelectState = new PointSelectState(this);
+		zoneSelectState = new ZoneSelectState(this);
+		
+		stateMachine = new StateMachine();
+		stateMachine.Initialize(zoneSelectState);
 	}
 	
 	public static void main(String[] args) {
@@ -53,7 +63,7 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		clearFigures.addActionListener(editeur.new ViderListe(editeur));
 		editeur.add(clearFigures,BorderLayout.EAST);
 		
-		//Componenet
+		//Component
 		JPanel component = new JPanel();
 		component.setBorder(BorderFactory.createTitledBorder("Component"));
 		component.setPreferredSize(new Dimension(200,480));
@@ -65,16 +75,15 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		{
 			public void keyPressed(KeyEvent e) 
 			{
-				int keyCode = e.getKeyCode();
+				/*int keyCode = e.getKeyCode();
 				System.out.println(e.getKeyChar());
 				if(keyCode == KeyEvent.VK_ESCAPE && currentFig.equals("Polygone")) 
 				{
 					currentFig = "";
-				}
+				}*/
 			}
 		});
 		frame.setVisible(true);
-		
 	}
 	
 	@Override
@@ -108,31 +117,29 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		JMenuItem createPoint = new JMenuItem("Point");
 		createPoint.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentFig = "Point";
-			currentState = "Creer";
+			createState.setCurrentFig("Point");
+			stateMachine.ChangeState(createState);
 			} });
 		createMenu.add(createPoint);
 		
 		JMenuItem createSegment = new JMenuItem("Segment");
 		createSegment.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentFig = "Segment"; 
-			currentState = "Creer";
+			createState.setCurrentFig("Segment");
+			stateMachine.ChangeState(createState);
 			} });
 		createMenu.add(createSegment);
 		
 		JMenuItem createCercle = new JMenuItem("Cercle");
 		createCercle.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentFig = "Cercle"; 
-			currentState = "Creer"; 
+			createState.setCurrentFig("Cercle");
+			stateMachine.ChangeState(createState);
 			} });
 		createMenu.add(createCercle);
 		
 		JMenuItem createPolygone = new JMenuItem("Polygone");
 		createPolygone.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentFig = "Polygone";
-			currentState = "Creer";
-			Polygone poly = new Polygone();
-			figures.add(poly);
+			createState.setCurrentFig("Polygone");
+			stateMachine.ChangeState(createState);
 			} });
 		createMenu.add(createPolygone);
 		menu.add(createMenu);
@@ -142,14 +149,12 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		JMenuItem selectPoint = new JMenuItem("Point");
 		selectPoint.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentState = "Point Selecting"; } });
+			stateMachine.ChangeState(pointSelectState);} });
 		select.add(selectPoint);
 		
 		JMenuItem selectZone = new JMenuItem("Zone");
 		selectZone.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) {
-			currentState = "Zone Selecting"; 
-			selectedPoint.setSelected(false);
-			selectedPoint = null;} });
+			stateMachine.ChangeState(zoneSelectState);} });
 		select.add(selectZone);
 		
 		JMenu calcMenu = new JMenu("Calculer");
@@ -158,16 +163,6 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		return menu;
 	}
 	
-	public void deSelectPoint() 
-	{
-		if(selectedPoint != null) 
-		{
-			currentState = "Point Selecting";
-			selectedPoint.setSelected(false);
-			selectedPoint = null;
-			repaint();
-		} 
-	}
 	
 	public class InitialiserFigures implements ActionListener{
 
@@ -208,162 +203,46 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(currentState.equals("Creer")) 
-		{
-			if(currentFig.equals("Point")) 
-			{
-				Point p = new Point(e.getX(),e.getY());
-				figures.add(p);
-				this.repaint();
-			}else if(currentFig.equals("Polygone") && figures.get(figures.size() - 1) instanceof Polygone)
-			{
-				Point mousePos = new Point(e.getX(),e.getY());
-				Polygone poly = (Polygone)figures.get(figures.size() - 1);
-				poly.add(mousePos);
-				this.repaint();
-			}
-		}
-		
+		stateMachine.getCurrentState().mouseClicked(e);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if(currentState.equals("Creer")) 
-		{
-			if(currentFig.equals("Segment")) 
-			{
-				Point mousePos = new Point(e.getX(),e.getY());
-				Segment s = new Segment(mousePos,mousePos);
-				figures.add(s);
-				this.repaint();
-			}else if(currentFig.equals("Cercle")) 
-			{
-				Point mousePos = new Point(e.getX(),e.getY());
-				Cercle c = new Cercle(mousePos,0);
-				figures.add(c);
-				this.repaint();
-			}
-		}
-		
-		
-		
-		if(currentState.equals("Point Selected")) 
-		{
-			deSelectPoint();
-		}
-		
-		
-		
-		if(currentState.equals("Point Selecting")) 
-		{
-			int i = 0;
-			Point mousePos = new Point(e.getX(),e.getY());
-			while(selectedPoint == null && i < figures.size()) 
-			{
-				selectedPoint = figures.get(i++).CloseTo(mousePos);
-				this.repaint();
-			}
-			if(selectedPoint != null) 
-			{
-				currentState = "Point Selected";
-				selectedPoint.setSelected(true);
-			}
-			this.repaint();
-		}
-		
-		if(currentState.equals("Zone Selecting")) 
-		{
-			selectedFigures.clear();
-			Point mousePos = new Point(e.getX(),e.getY());
-			selectZone = new Rectangle(mousePos);
-			figures.add(selectZone);
-		}
-		
+		stateMachine.getCurrentState().mousePressed(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if(currentState.equals("Selecting")) 
-		{
-			for(Figure fig:figures) 
-			{
-				if(fig.IsInside(selectZone) && !(fig instanceof Rectangle)) 
-				{
-					selectedFigures.add(fig);
-					fig.setSelected(true);
-					
-				}
-			}
-			figures.remove(selectZone);
-			selectZone = null; 
-			repaint();
-		}
+		stateMachine.getCurrentState().mouseReleased(e);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
+		stateMachine.getCurrentState().mouseEntered(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		deSelectPoint();
-		
+		stateMachine.getCurrentState().mouseExited(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(figures.size() < 1)return;
-		
-		if(currentState.equals("Creer")) 
-		{
-			if(currentFig.equals("Segment") && figures.get(figures.size() - 1) instanceof Segment) 
-			{
-				Point mousePos = new Point(e.getX(),e.getY());
-				Segment s = (Segment)figures.get(figures.size() - 1);
-				s.setP2(mousePos);
-				this.repaint();
-			}else if(currentFig.equals("Cercle") && figures.get(figures.size() - 1) instanceof Cercle) 
-			{
-				Point mousePos = new Point(e.getX(),e.getY());
-				Cercle c = (Cercle)figures.get(figures.size() - 1);
-				try {
-					c.setRayon(c.getCentre().Distance(mousePos)*2);
-				} catch (NegRadiusException e1) {
-					// TODO Auto-generated catch block
-				}
-				this.repaint();
-			}
-		}
-		
-		if(currentState.equals("Point Selected") && selectedPoint != null) 
-		{
-			Point mousePos = new Point(e.getX(),e.getY());
-			selectedPoint.setX(mousePos.getX());
-			selectedPoint.setY(mousePos.getY());
-			this.repaint();
-		}
-		if(figures.get(figures.size() - 1) instanceof Rectangle) 
-		{
-			Point mousePos = new Point(e.getX(),e.getY());
-			selectZone = (Rectangle)figures.get(figures.size() - 1);
-			selectZone.Resize(mousePos);
-			repaint();
-		}
+		stateMachine.getCurrentState().mouseDragged(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		stateMachine.getCurrentState().mouseMoved(e);
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
-		zoomer = true;
+		stateMachine.getCurrentState().mouseWheelMoved(e);
+		/*zoomer = true;
 	    //Zoom in
 	    if (e.getWheelRotation() < 0) {
 			System.out.println("ld");
@@ -374,6 +253,6 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	    if (e.getWheelRotation() > 0) {
 	        zoomFactor /= 1.1;
 	        repaint();
-	    }
+	    }*/
 	}
 }

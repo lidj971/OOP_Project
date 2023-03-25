@@ -69,6 +69,8 @@ public class Polygone extends Figure{
 	@Override
 	public void Paint(Graphics gc) 
 	{
+		if(getSommets().size() == 0) return;
+		
 		Color currentColor = gc.getColor();		
 		int n = sommets.size();
 		Point p2 = sommets.get(0);

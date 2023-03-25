@@ -10,6 +10,7 @@ public class Rectangle extends Figure implements Cloneable,Serializable{
 	private Point B;
 	private Point C;
 	private Point D;
+	private boolean poser;
 	
 	public Rectangle(Point p) 
 	{
@@ -50,12 +51,20 @@ public class Rectangle extends Figure implements Cloneable,Serializable{
 	public void Paint(Graphics gc) {
 		// TODO Auto-generated method stub
 		Color currentColor = gc.getColor();
-		gc.setColor(new Color(0, 102, 255));
+		Color selectColor;
+		if(poser) 
+		{
+			selectColor = new Color(7, 227, 40);
+		}else 
+		{
+			selectColor = new Color(0, 102, 255);
+		}
+		gc.setColor(selectColor);
 		gc.drawLine((int)A.getX(), (int)A.getY(), (int)B.getX(), (int)B.getY());
 		gc.drawLine((int)A.getX(), (int)A.getY(), (int)D.getX(), (int)D.getY());
 		gc.drawLine((int)C.getX(), (int)C.getY(), (int)B.getX(), (int)B.getY());
 		gc.drawLine((int)C.getX(), (int)C.getY(), (int)D.getX(), (int)D.getY());
-		gc.setColor(new Color(0, 102, 255,50));
+		gc.setColor(new Color(selectColor.getRed(),selectColor.getGreen(),selectColor.getBlue(),50));
 		gc.fillRect((int)getUpLeftCorner().getX(), (int)getUpLeftCorner().getY(), (int)A.Distance(B), (int)A.Distance(D));
 		gc.setColor(currentColor);
 	}
@@ -147,6 +156,14 @@ public class Rectangle extends Figure implements Cloneable,Serializable{
 	public boolean IsInside(Rectangle rect) {
 		// TODO Auto-generated method stub
 		return A.IsInside(rect) && B.IsInside(rect) && C.IsInside(rect) && D.IsInside(rect);
+	}
+
+	public boolean isPoser() {
+		return poser;
+	}
+
+	public void setPoser(boolean poser) {
+		this.poser = poser;
 	}
 	
 }
