@@ -1,5 +1,6 @@
 package figures;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
@@ -118,6 +119,22 @@ public class CreateState extends State{
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void escapeTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(currentFig.equals("Polygone")) 
+		{
+			Polygone poly = new Polygone();
+			editeur.figures.add(poly);
+		}
+	}
+
+	@Override
+	public void backspaceTyped(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

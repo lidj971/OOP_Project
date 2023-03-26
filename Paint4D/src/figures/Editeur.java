@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
+import javax.accessibility.Accessible;
 import javax.swing.*;
 
 
@@ -33,6 +34,12 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		this.addMouseMotionListener(this);
 		this.addMouseWheelListener(this);
 		
+		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESCAPE);
+	    this.getActionMap().put(ESCAPE, escape);
+	    
+	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), BACKSPACE);
+	    this.getActionMap().put(BACKSPACE, backspace);
+	
 		createState = new CreateState(this);
 		pointSelectState = new PointSelectState(this);
 		zoneSelectState = new ZoneSelectState(this);
@@ -55,6 +62,7 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		//Zone de dessin
 		Editeur editeur = new Editeur();
+		System.out.println(editeur.getKeyListeners().length);
 		editeur.setBorder(BorderFactory.createTitledBorder("Plan"));
 		//JButton initFigures = new JButton("Initialiser Figures");
 		//initFigures.addActionListener(editeur.new InitialiserFigures(editeur));
@@ -71,20 +79,10 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		contenu.add(component,BorderLayout.WEST);
 		contenu.add(editeur);
-		frame.addKeyListener(new KeyAdapter() 
-		{
-			public void keyPressed(KeyEvent e) 
-			{
-				/*int keyCode = e.getKeyCode();
-				System.out.println(e.getKeyChar());
-				if(keyCode == KeyEvent.VK_ESCAPE && currentFig.equals("Polygone")) 
-				{
-					currentFig = "";
-				}*/
-			}
-		});
+		
 		frame.setVisible(true);
 	}
+	
 	
 	@Override
 	public void paint(Graphics gc) 
@@ -255,4 +253,20 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	        repaint();
 	    }*/
 	}
+	
+	private static final String ESCAPE = "Escape";
+    private Action escape = new AbstractAction(ESCAPE) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            stateMachine.getCurrentState().escapeTyped(e);
+        }
+    };
+    
+    private static final String BACKSPACE = "Backspace";
+    private Action backspace = new AbstractAction(BACKSPACE) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            stateMachine.getCurrentState().backspaceTyped(e);
+        }
+    };
 }

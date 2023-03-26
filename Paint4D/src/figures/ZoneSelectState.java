@@ -1,5 +1,6 @@
 package figures;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
@@ -147,6 +148,29 @@ public class ZoneSelectState extends State{
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void escapeTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		for(Figure fig:editeur.figures) 
+		{
+			fig.setSelected(false);
+		}
+		selectedFigures.clear();
+		editeur.figures.remove(selectZone);
+		selectZone = null; 
+		editeur.repaint();
+	}
+
+	@Override
+	public void backspaceTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		editeur.figures.removeAll(selectedFigures);
+		selectedFigures.clear();
+		editeur.figures.remove(selectZone);
+		selectZone = null; 
+		editeur.repaint();
 	}
 
 }

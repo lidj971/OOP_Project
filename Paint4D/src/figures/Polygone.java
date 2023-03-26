@@ -163,6 +163,7 @@ public class Polygone extends Figure{
 	@Override
 	public Point CloseTo(Point p) {
 		// TODO Auto-generated method stub
+		if(getSommets().size() == 0) return null;
 		int i = 0;
 		Point closestPoint = this.getSommets().get(i++).CloseTo(p);
 		while(closestPoint == null && i < this.getSommets().size()) 

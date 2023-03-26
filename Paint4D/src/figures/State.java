@@ -1,5 +1,6 @@
 package figures;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
@@ -38,4 +39,8 @@ public abstract class State {
 	public abstract void mouseMoved(MouseEvent e);
 
 	public abstract void mouseWheelMoved(MouseWheelEvent e);
+	
+	public abstract void escapeTyped(ActionEvent e);
+	
+	public abstract void backspaceTyped(ActionEvent e);
 }

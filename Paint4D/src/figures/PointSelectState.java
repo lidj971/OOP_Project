@@ -1,16 +1,19 @@
 package figures;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 public class PointSelectState extends State {
 
+	
+	private Point selectedPoint = null;
+	private Figure selectedFig = null;
+	
 	public PointSelectState(Editeur editeur) {
 		super(editeur);
 		// TODO Auto-generated constructor stub
 	}
-
-	private Point selectedPoint = null;
 	
 	@Override 
 	public void Enter() 
@@ -56,6 +59,7 @@ public class PointSelectState extends State {
 		if(selectedPoint != null) 
 		{
 			selectedPoint.setSelected(true);
+			selectedFig = editeur.figures.get(--i);
 		}
 		editeur.repaint();
 	}
@@ -99,6 +103,46 @@ public class PointSelectState extends State {
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void escapeTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(selectedPoint != null) 
+		{
+			selectedPoint.setSelected(false);
+		}
+		selectedPoint = null;
+		editeur.repaint();
+	}
+
+	@Override
+	public void backspaceTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(selectedFig != null && selectedPoint != null) 
+		{
+			if(selectedFig instanceof Polygone) 
+			{
+				Polygone poly = (Polygone) selectedFig;
+				poly.getSommets().remove(selectedPoint);
+			}else if(selectedFig instanceof Segment) 
+			{
+				Segment s = (Segment) selectedFig;
+				if(!s.getP1().equals(selectedPoint)) 
+				{
+					editeur.figures.add(s.getP1().clone());
+				}else 
+				{
+					editeur.figures.add(s.getP2().clone());
+				}
+				editeur.figures.remove(selectedFig);
+			}else
+			{
+				editeur.figures.remove(selectedFig);
+			}
+			selectedPoint = null;
+			editeur.repaint();
+		}
 	}
 
 }
