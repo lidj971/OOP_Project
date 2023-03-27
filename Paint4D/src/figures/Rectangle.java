@@ -82,6 +82,18 @@ public class Rectangle extends Figure implements Cloneable,Serializable{
 		return closestPoint;
 	}
 
+	@Override
+	public Rectangle clone() 
+	{
+		Rectangle r = (Rectangle)super.clone();
+		r.setA(getA().clone());
+		r.setB(getB().clone());
+		r.setC(getC().clone());
+		r.setD(getD().clone());
+		return r;
+		
+	}
+	
 	public void Resize(Point p) 
 	{
 		B.setX(p.getX());

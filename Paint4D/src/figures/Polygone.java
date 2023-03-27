@@ -89,6 +89,7 @@ public class Polygone extends Figure{
 		gc.setColor(currentColor);
 	}
 	
+	@Override
 	public Polygone clone() 
 	{
 		Polygone pClone = (Polygone)super.clone();

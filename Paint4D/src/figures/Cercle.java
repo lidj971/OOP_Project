@@ -62,6 +62,7 @@ public class Cercle extends Figure implements Cloneable,Serializable{
 		return getRayon() == cercle.getRayon() && cercle.getCentre().Equals(getCentre());
 	}
 	
+	@Override
 	public Cercle clone() 
 	{
 		Cercle c = (Cercle)super.clone();

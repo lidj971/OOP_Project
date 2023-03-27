@@ -7,11 +7,13 @@ import java.awt.event.MouseWheelEvent;
 public abstract class State {
 	protected Editeur editeur;
 	protected boolean isActive;
+	protected boolean mouseInside;
 	
 	public State(Editeur editeur) 
 	{
 		this.editeur = editeur;
 		isActive = false;
+		mouseInside = false;
 	}
 	
 	public void Enter() 
@@ -30,9 +32,15 @@ public abstract class State {
 
 	public abstract void mouseReleased(MouseEvent e);
 
-	public abstract void mouseEntered(MouseEvent e);
+	public void mouseEntered(MouseEvent e) 
+	{
+		mouseInside = true;
+	}
 
-	public abstract void mouseExited(MouseEvent e);
+	public void mouseExited(MouseEvent e) 
+	{
+		mouseInside = false;
+	}
 
 	public abstract void mouseDragged(MouseEvent e);
 	
@@ -43,4 +51,8 @@ public abstract class State {
 	public abstract void escapeTyped(ActionEvent e);
 	
 	public abstract void backspaceTyped(ActionEvent e);
+	
+	public abstract void ctrl_cTyped(ActionEvent e);
+	
+	public abstract void ctrl_vTyped(ActionEvent e);
 }

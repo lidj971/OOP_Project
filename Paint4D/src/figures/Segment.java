@@ -72,16 +72,19 @@ public class Segment extends Figure implements Cloneable,Serializable{
 		return getP1().Distance(getP2());
 	}
 	
+	
 	public boolean Equals(Segment segment) 
 	{
 		return (segment.getP1().Equals(getP1()) && segment.getP2().Equals(getP2())) || (segment.getP1().Equals(getP2()) && segment.getP2().Equals(getP1()));
 	}
 	
+	@Override
 	public Segment clone() 
 	{
 		Segment s = (Segment)super.clone();
 		s.setP1(getP1().clone());
 		s.setP2(getP2().clone());
+		System.out.println("segClone");
 		return s;
 	}
 

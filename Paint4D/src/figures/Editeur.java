@@ -39,7 +39,13 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	    
 	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), BACKSPACE);
 	    this.getActionMap().put(BACKSPACE, backspace);
+	    
+	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_DOWN_MASK), CTRL_C);
+	    this.getActionMap().put(CTRL_C, ctrl_c);
 	
+	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V,KeyEvent.CTRL_DOWN_MASK), CTRL_V);
+	    this.getActionMap().put(CTRL_V, ctrl_v);
+	    
 		createState = new CreateState(this);
 		pointSelectState = new PointSelectState(this);
 		zoneSelectState = new ZoneSelectState(this);
@@ -62,7 +68,6 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		//Zone de dessin
 		Editeur editeur = new Editeur();
-		System.out.println(editeur.getKeyListeners().length);
 		editeur.setBorder(BorderFactory.createTitledBorder("Plan"));
 		//JButton initFigures = new JButton("Initialiser Figures");
 		//initFigures.addActionListener(editeur.new InitialiserFigures(editeur));
@@ -267,6 +272,22 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
         @Override
         public void actionPerformed(ActionEvent e) {
             stateMachine.getCurrentState().backspaceTyped(e);
+        }
+    };
+    
+    private static final String CTRL_C = "Ctrl_C";
+    private Action ctrl_c = new AbstractAction(CTRL_C) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	stateMachine.getCurrentState().ctrl_cTyped(e);
+        }
+    };
+    
+    private static final String CTRL_V = "Ctrl_V";
+    private Action ctrl_v = new AbstractAction(CTRL_V) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	stateMachine.getCurrentState().ctrl_vTyped(e);
         }
     };
 }

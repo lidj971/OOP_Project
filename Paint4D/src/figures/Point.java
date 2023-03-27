@@ -85,6 +85,7 @@ public class Point extends Figure implements Cloneable,Serializable{
 		return (point.getX() == this.getX() && point.getY() == this.getY());
 	} 
 	
+	@Override
 	public Point clone() 
 	{
 		Point p = (Point)super.clone();

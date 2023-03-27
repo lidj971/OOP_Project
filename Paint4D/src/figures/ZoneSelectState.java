@@ -4,18 +4,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ZoneSelectState extends State{
 
 	private ArrayList<Figure> selectedFigures;
+	private ArrayList<Figure> cachedFigures;
 	public Rectangle selectZone;
+	private Rectangle cachedSelectZone;
 	private Point cachedMousePos;
+	private Point currentMousePos;
 	
 	public ZoneSelectState(Editeur editeur) {
 		super(editeur);
 		selectedFigures = new ArrayList<Figure>();
+		cachedFigures = new ArrayList<Figure>();
 		selectZone = null;
-		// TODO Auto-generated constructor stub
+		cachedSelectZone = null;
 	}
 
 	@Override 
@@ -105,13 +110,13 @@ public class ZoneSelectState extends State{
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		super.mouseEntered(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		super.mouseExited(e);
 	}
 
 	@Override
@@ -141,7 +146,7 @@ public class ZoneSelectState extends State{
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		currentMousePos = new Point(e.getX(),e.getY());
 	}
 
 	@Override
@@ -170,6 +175,36 @@ public class ZoneSelectState extends State{
 		selectedFigures.clear();
 		editeur.figures.remove(selectZone);
 		selectZone = null; 
+		editeur.repaint();
+	}
+
+	@Override
+	public void ctrl_cTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(selectedFigures.size() == 0)return; 
+		
+		cachedFigures.clear();
+		for(Figure fig:selectedFigures) 
+		{
+			cachedFigures.add(fig.clone());
+		}
+		cachedSelectZone = selectZone;
+	}
+
+	@Override
+	public void ctrl_vTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(cachedFigures.size() == 0 || !mouseInside)return;
+		
+		for(Figure fig:cachedFigures) 
+		{
+			fig.setSelected(false);
+			fig.Translater(currentMousePos.getX() - cachedSelectZone.getCentre().getX() ,currentMousePos.getY() - cachedSelectZone.getCentre().getY());
+			editeur.figures.add(0, fig);
+		}
+		
+		
+		
 		editeur.repaint();
 	}
 

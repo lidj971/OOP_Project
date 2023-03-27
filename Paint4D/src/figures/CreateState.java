@@ -138,4 +138,16 @@ public class CreateState extends State{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void ctrl_cTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void ctrl_vTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
