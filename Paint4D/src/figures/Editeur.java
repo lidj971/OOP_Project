@@ -106,8 +106,10 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	public void addFigureList(FigureList figureList,int pos) 
 	{
 		figuresList.add(pos,figureList);
-		currentFiguresList++;
-		if(figuresList.size() > 10) 
+		if(figuresList.size() <= 10) 
+		{
+			currentFiguresList++;
+		}else 
 		{
 			figuresList.remove(0);
 		}
