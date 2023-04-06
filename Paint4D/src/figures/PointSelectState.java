@@ -3,12 +3,14 @@ package figures;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
 
 public class PointSelectState extends State {
 
 	
 	private Point selectedPoint = null;
 	private Figure selectedFig = null;
+	private FigureList cachedFigList;
 	
 	public PointSelectState(Editeur editeur) {
 		super(editeur);
@@ -30,6 +32,7 @@ public class PointSelectState extends State {
 			selectedPoint.setSelected(false);
 		}
 		selectedPoint = null;
+		cachedFigList = null;
 		editeur.repaint();
 	}
 	
@@ -58,8 +61,9 @@ public class PointSelectState extends State {
 		
 		if(selectedPoint != null) 
 		{
-			selectedPoint.setSelected(true);
 			selectedFig = editeur.figures.get(--i);
+			cachedFigList = editeur.figures.clone();
+			selectedPoint.setSelected(true);
 		}
 		editeur.repaint();
 	}
@@ -67,6 +71,8 @@ public class PointSelectState extends State {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		editeur.addFigureList(cachedFigList, editeur.currentFiguresList);
+		cachedFigList = null;
 	}
 
 	@Override
@@ -90,7 +96,7 @@ public class PointSelectState extends State {
 			selectedPoint.setX(mousePos.getX());
 			selectedPoint.setY(mousePos.getY());
 			editeur.repaint();
-		}
+		}		
 	}
 
 	@Override
@@ -157,4 +163,27 @@ public class PointSelectState extends State {
 		
 	}
 
+	@Override
+	public void ctrl_zTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		super.ctrl_zTyped(e);
+		if(selectedPoint != null) 
+		{
+			selectedPoint.setSelected(false);
+		}
+		selectedPoint = null;
+		editeur.repaint();
+	}
+	
+	@Override
+	public void ctrl_yTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		super.ctrl_yTyped(e);
+		if(selectedPoint != null) 
+		{
+			selectedPoint.setSelected(false);
+		}
+		selectedPoint = null;
+		editeur.repaint();
+	}
 }

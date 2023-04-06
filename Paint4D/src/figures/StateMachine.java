@@ -1,6 +1,6 @@
 package figures;
 
-public class StateMachine {
+public class StateMachine implements Cloneable{
 	private State currentState;
 
 	public void Initialize(State startingState)

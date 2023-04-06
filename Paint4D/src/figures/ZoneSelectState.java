@@ -10,6 +10,7 @@ public class ZoneSelectState extends State{
 
 	private ArrayList<Figure> selectedFigures;
 	private ArrayList<Figure> cachedFigures;
+	private FigureList cachedFigList;
 	public Rectangle selectZone;
 	private Rectangle cachedSelectZone;
 	private Point cachedMousePos;
@@ -33,13 +34,15 @@ public class ZoneSelectState extends State{
 	public void Exit() 
 	{
 		super.Exit();
-		for(Figure fig:editeur.figures) 
+		for(Figure fig:editeur.figures) //Opti
 		{
 			fig.setSelected(false);
 		}
 		selectedFigures.clear();
+		cachedFigures.clear();
 		editeur.figures.remove(selectZone);
 		selectZone = null; 
+		cachedFigList = null;
 		editeur.repaint();
 	}
 	
@@ -58,6 +61,12 @@ public class ZoneSelectState extends State{
 			if(mousePos.IsInside(selectZone)) 
 			{
 				cachedMousePos = new Point(mousePos);
+				cachedFigList = editeur.figures.clone();
+				cachedFigList.remove(cachedFigList.size() - 1);
+				for(Figure fig:cachedFigList) //Opti
+				{
+					fig.setSelected(false);
+				}
 			}else 
 			{
 				editeur.figures.remove(selectZone);
@@ -104,6 +113,12 @@ public class ZoneSelectState extends State{
 			editeur.figures.remove(selectZone);
 			selectZone = null; 
 		}
+		
+		if(cachedFigList != null && !cachedFigList.get(0).getCentre().equals(editeur.figures.get(0).getCentre())) 
+		{
+			editeur.addFigureList(cachedFigList,editeur.currentFiguresList);
+		}
+		
 		editeur.repaint();
 	}
 
@@ -134,7 +149,8 @@ public class ZoneSelectState extends State{
 			
 		}else 
 		{
-			for(Figure fig:editeur.figures) 
+			selectZone.Translater(mousePos.getX() - cachedMousePos.getX() ,mousePos.getY() - cachedMousePos.getY());
+			for(Figure fig:selectedFigures) 
 			{
 				fig.Translater(mousePos.getX() - cachedMousePos.getX() ,mousePos.getY() - cachedMousePos.getY());
 			}
@@ -171,10 +187,21 @@ public class ZoneSelectState extends State{
 	@Override
 	public void backspaceTyped(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(selectedFigures.size() == 0)return;
+		FigureList figListClone = editeur.figures.clone();
 		editeur.figures.removeAll(selectedFigures);
 		selectedFigures.clear();
 		editeur.figures.remove(selectZone);
 		selectZone = null; 
+		
+		figListClone.remove(figListClone.size() - 1);
+		for(Figure fig:figListClone) //Opti
+		{
+			fig.setSelected(false);
+		}
+		
+		editeur.addFigureList(figListClone,editeur.currentFiguresList);
+		
 		editeur.repaint();
 	}
 
@@ -186,9 +213,11 @@ public class ZoneSelectState extends State{
 		cachedFigures.clear();
 		for(Figure fig:selectedFigures) 
 		{
-			cachedFigures.add(fig.clone());
+			Figure figClone = fig.clone();
+			figClone.setSelected(false);
+			cachedFigures.add(figClone);
 		}
-		cachedSelectZone = selectZone;
+		cachedSelectZone = selectZone.clone();
 	}
 
 	@Override
@@ -196,16 +225,59 @@ public class ZoneSelectState extends State{
 		// TODO Auto-generated method stub
 		if(cachedFigures.size() == 0 || !mouseInside)return;
 		
+		FigureList figListClone = editeur.figures.clone();
+		
+		ArrayList<Figure> newCachedFigures = new ArrayList<Figure>();
+		
 		for(Figure fig:cachedFigures) 
 		{
-			fig.setSelected(false);
 			fig.Translater(currentMousePos.getX() - cachedSelectZone.getCentre().getX() ,currentMousePos.getY() - cachedSelectZone.getCentre().getY());
 			editeur.figures.add(0, fig);
+			newCachedFigures.add(fig.clone());
 		}
 		
+		cachedSelectZone.Translater(currentMousePos.getX() - cachedSelectZone.getCentre().getX() ,currentMousePos.getY() - cachedSelectZone.getCentre().getY());
 		
+		cachedFigures = newCachedFigures;
+		
+		figListClone.remove(figListClone.size() - 1);
+		for(Figure fig:figListClone) //Opti
+		{
+			fig.setSelected(false);
+		}
+		
+		editeur.addFigureList(figListClone,editeur.currentFiguresList);
 		
 		editeur.repaint();
 	}
 
+	@Override
+	public void ctrl_zTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		for(Figure fig:editeur.figures) //Opti
+		{
+			fig.setSelected(false);
+		}
+		selectedFigures.clear();
+		cachedFigures.clear();
+		editeur.figures.remove(selectZone);
+		selectZone = null; 
+		editeur.repaint();
+		super.ctrl_zTyped(e);
+	}
+	
+	@Override
+	public void ctrl_yTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		for(Figure fig:selectedFigures) //Opti
+		{
+			fig.setSelected(false);
+		}
+		selectedFigures.clear();
+		cachedFigures.clear();
+		editeur.figures.remove(selectZone);
+		selectZone = null; 
+		super.ctrl_yTyped(e);
+		editeur.repaint();
+	}
 }

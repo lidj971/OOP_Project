@@ -42,33 +42,39 @@ public class CreateState extends State{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if(!currentFig.equals("Point") && !currentFig.equals("Polygone"))return;
+		FigureList figListClone = editeur.figures.clone();
 		Point mousePos = new Point(e.getX(),e.getY());
 		if(currentFig.equals("Point")) 
 		{
 			Point p = mousePos.clone();
 			editeur.figures.add(p);
-		}else if(currentFig.equals("Polygone") && editeur.figures.get(editeur.figures.size() - 1) instanceof Polygone)
+		}else if(editeur.figures.get(editeur.figures.size() - 1) instanceof Polygone)
 		{
 			Polygone poly = (Polygone)editeur.figures.get(editeur.figures.size() - 1);
 			poly.add(mousePos);
 		}
+		editeur.addFigureList(figListClone, editeur.currentFiguresList);
 		editeur.repaint();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if(!currentFig.equals("Segment") && !currentFig.equals("Cercle"))return;
+		FigureList figListClone = editeur.figures.clone();
 		Point mousePos = new Point(e.getX(),e.getY());
 		if(currentFig.equals("Segment")) 
 		{
 			Segment s = new Segment(mousePos,mousePos);
 			editeur.figures.add(s);
 			
-		}else if(currentFig.equals("Cercle")) 
+		}else 
 		{
 			Cercle c = new Cercle(mousePos,0);
 			editeur.figures.add(c);
 		}
+		editeur.addFigureList(figListClone, editeur.currentFiguresList);
 		editeur.repaint();
 	}
 
@@ -93,13 +99,14 @@ public class CreateState extends State{
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if(!currentFig.equals("Segment") && !currentFig.equals("Cercle"))return;
 		Point mousePos = new Point(e.getX(),e.getY());
-		if(currentFig.equals("Segment") && editeur.figures.get(editeur.figures.size() - 1) instanceof Segment) 
+		if(editeur.figures.get(editeur.figures.size() - 1) instanceof Segment) 
 		{
 			Segment s = (Segment)editeur.figures.get(editeur.figures.size() - 1);
 			s.setP2(mousePos);
 			editeur.repaint();
-		}else if(currentFig.equals("Cercle") && editeur.figures.get(editeur.figures.size() - 1) instanceof Cercle) 
+		}else if(editeur.figures.get(editeur.figures.size() - 1) instanceof Cercle) 
 		{
 			Cercle c = (Cercle)editeur.figures.get(editeur.figures.size() - 1);
 			try {
@@ -149,5 +156,11 @@ public class CreateState extends State{
 	public void ctrl_vTyped(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void ctrl_zTyped(ActionEvent e) {
+		// TODO Auto-generated method stub
+		super.ctrl_zTyped(e);
 	}
 }

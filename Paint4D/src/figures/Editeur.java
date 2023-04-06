@@ -11,7 +11,10 @@ import javax.swing.*;
 
 public class Editeur extends JPanel implements MouseListener,MouseMotionListener,MouseWheelListener{
 
-	public ArrayList<Figure> figures;
+	public FigureList figures;
+	public ArrayList<FigureList> figuresList;
+	
+	public int currentFiguresList;
 	//private double zoomFactor = 1;
 	//private double prevZoomFactor = 1;
 	//private boolean zoomer;
@@ -28,7 +31,13 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		repaint();
 		
-		figures = new ArrayList<Figure>();
+		figures = new FigureList();
+		
+		figuresList = new ArrayList<FigureList>();
+		
+		currentFiguresList = 0;
+		
+		figuresList.add(figures);
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -45,6 +54,12 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	
 	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V,KeyEvent.CTRL_DOWN_MASK), CTRL_V);
 	    this.getActionMap().put(CTRL_V, ctrl_v);
+	    
+	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,KeyEvent.CTRL_DOWN_MASK), CTRL_Z);
+	    this.getActionMap().put(CTRL_Z, ctrl_z);
+	    
+	    this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,KeyEvent.CTRL_DOWN_MASK), CTRL_Y);
+	    this.getActionMap().put(CTRL_Y, ctrl_y);
 	    
 		createState = new CreateState(this);
 		pointSelectState = new PointSelectState(this);
@@ -88,6 +103,15 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		frame.setVisible(true);
 	}
 	
+	public void addFigureList(FigureList figureList,int pos) 
+	{
+		figuresList.add(pos,figureList);
+		currentFiguresList++;
+		if(figuresList.size() > 10) 
+		{
+			figuresList.remove(0);
+		}
+	}
 	
 	@Override
 	public void paint(Graphics gc) 
@@ -108,6 +132,7 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 			fig.Paint(gc);
 		}
 	}
+	
 	
 	public static JMenuBar CreateMenuBar() 
 	{
@@ -164,25 +189,6 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		menu.add(calcMenu);
 		
 		return menu;
-	}
-	
-	
-	public class InitialiserFigures implements ActionListener{
-
-		private Editeur editeur;
-		
-		public InitialiserFigures(Editeur editeur) 
-		{
-			this.editeur = editeur;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			editeur.figures = new ArrayList<Figure>();
-			System.out.println(editeur.figures);
-		}
-		
 	}
 	
 	public class ViderListe implements ActionListener{
@@ -288,6 +294,22 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
         @Override
         public void actionPerformed(ActionEvent e) {
         	stateMachine.getCurrentState().ctrl_vTyped(e);
+        }
+    };
+    
+    private static final String CTRL_Z = "Ctrl_Z";
+    private Action ctrl_z = new AbstractAction(CTRL_Z) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	stateMachine.getCurrentState().ctrl_zTyped(e);
+        }
+    };
+    
+    private static final String CTRL_Y = "Ctrl_Y";
+    private Action ctrl_y = new AbstractAction(CTRL_Y) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	stateMachine.getCurrentState().ctrl_yTyped(e);
         }
     };
 }
