@@ -38,7 +38,7 @@ public class Rectangle extends Figure implements Cloneable,Serializable{
 	@Override
 	public String ToString() {
 		// TODO Auto-generated method stub
-		return A.ToString() + " " + B.ToString() + " " + C.ToString() + " " + D.ToString();
+		return "A : " + A.ToString() + " B : "  + B.ToString() + " C : " + C.ToString() + " D : " + D.ToString();
 	}
 
 	@Override

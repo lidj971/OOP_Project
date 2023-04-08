@@ -1,10 +1,13 @@
 package figures;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.swing.JLabel;
 
 public class ZoneSelectState extends State{
 
@@ -28,6 +31,17 @@ public class ZoneSelectState extends State{
 	public void Enter() 
 	{
 		super.Enter();
+		
+		JLabel selectingLabel = new JLabel("Zone Selecting");
+		selectingLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(selectingLabel);
+		
+		JLabel cursorLabel = new JLabel("Rectangle");
+		cursorLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(cursorLabel);
+		
+		editeur.component.revalidate();
+		editeur.component.repaint();
 	}
 	
 	@Override 
@@ -44,6 +58,10 @@ public class ZoneSelectState extends State{
 		selectZone = null; 
 		cachedFigList = null;
 		editeur.repaint();
+		
+		editeur.component.removeAll();
+		editeur.component.repaint();
+		editeur.component.revalidate();
 	}
 	
 	@Override
@@ -77,6 +95,17 @@ public class ZoneSelectState extends State{
 				selectZone = null; 
 				selectedFigures.clear();
 				editeur.repaint();
+				
+				int i = editeur.component.getComponents().length - 1;
+				
+				while(i >= 2) 
+				{
+					editeur.component.remove(i);
+					i--;
+				}
+				
+				editeur.component.revalidate();
+				editeur.component.repaint();
 			}
 		}
 
@@ -86,6 +115,13 @@ public class ZoneSelectState extends State{
 			Point mousePos = new Point(e.getX(),e.getY());
 			selectZone = new Rectangle(mousePos);
 			editeur.figures.add(selectZone);
+			
+			if(editeur.component.getComponent(1) instanceof JLabel) 
+			{
+				JLabel selectZoneLabel = (JLabel)editeur.component.getComponent(1);
+				selectZoneLabel.setText("SelectZone" + selectZone.ToString());
+				editeur.component.repaint();
+			}
 		}
 	}
 
@@ -101,9 +137,17 @@ public class ZoneSelectState extends State{
 					selectedFigures.add(fig);
 					fig.setSelected(true);
 					
+					JLabel figLabel = new JLabel(fig.ToString());
+					figLabel.setPreferredSize(new Dimension(200,20));
+					
+					editeur.component.add(figLabel);
+					editeur.component.revalidate();
+					editeur.component.repaint();
 				}
 			}
 		}
+		
+		
 		
 		if(selectedFigures.size() > 0) 
 		{
@@ -150,19 +194,45 @@ public class ZoneSelectState extends State{
 		}else 
 		{
 			selectZone.Translater(mousePos.getX() - cachedMousePos.getX() ,mousePos.getY() - cachedMousePos.getY());
+			
+			int i = 2;
 			for(Figure fig:selectedFigures) 
 			{
 				fig.Translater(mousePos.getX() - cachedMousePos.getX() ,mousePos.getY() - cachedMousePos.getY());
+				
+				if(editeur.component.getComponent(i) instanceof JLabel) 
+				{
+
+					JLabel figLabel = (JLabel)editeur.component.getComponent(i);
+					figLabel.setText(fig.ToString());
+				}
+				i++;
 			}
+			editeur.component.revalidate();
+			editeur.component.repaint();
 			cachedMousePos.Translater(mousePos.getX() - cachedMousePos.getX() ,mousePos.getY() - cachedMousePos.getY());
 		}
+		
+		if(editeur.component.getComponent(1) instanceof JLabel) 
+		{
+			JLabel selectZoneLabel = (JLabel)editeur.component.getComponent(1);
+			selectZoneLabel.setText("SelectZone" + selectZone.ToString());
+			editeur.component.repaint();
+		}
+		
 		editeur.repaint();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		currentMousePos = new Point(e.getX(),e.getY());
+		if(editeur.component.getComponent(1) instanceof JLabel && selectZone == null) 
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			JLabel cursorlabel = (JLabel)editeur.component.getComponent(1);
+			cursorlabel.setText("Cursor" + mousePos.ToString());
+			editeur.component.repaint();
+		}
 	}
 
 	@Override
@@ -182,6 +252,17 @@ public class ZoneSelectState extends State{
 		editeur.figures.remove(selectZone);
 		selectZone = null; 
 		editeur.repaint();
+		
+		int i = editeur.component.getComponents().length - 1;
+		
+		while(i >= 2) 
+		{
+			editeur.component.remove(i);
+			i--;
+		}
+		
+		editeur.component.revalidate();
+		editeur.component.repaint();
 	}
 
 	@Override
@@ -203,6 +284,17 @@ public class ZoneSelectState extends State{
 		editeur.addFigureList(figListClone,editeur.currentFiguresList);
 		
 		editeur.repaint();
+		
+		int i = editeur.component.getComponents().length - 1;
+		
+		while(i >= 2) 
+		{
+			editeur.component.remove(i);
+			i--;
+		}
+		
+		editeur.component.revalidate();
+		editeur.component.repaint();
 	}
 
 	@Override
@@ -264,6 +356,17 @@ public class ZoneSelectState extends State{
 		selectZone = null; 
 		editeur.repaint();
 		super.ctrl_zTyped(e);
+		
+		int i = editeur.component.getComponents().length - 1;
+		
+		while(i >= 2) 
+		{
+			editeur.component.remove(i);
+			i--;
+		}
+		
+		editeur.component.revalidate();
+		editeur.component.repaint();
 	}
 	
 	@Override
@@ -279,5 +382,16 @@ public class ZoneSelectState extends State{
 		selectZone = null; 
 		super.ctrl_yTyped(e);
 		editeur.repaint();
+		
+		int i = editeur.component.getComponents().length - 1;
+		
+		while(i >= 2) 
+		{
+			editeur.component.remove(i);
+			i--;
+		}
+		
+		editeur.component.revalidate();
+		editeur.component.repaint();
 	}
 }

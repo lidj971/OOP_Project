@@ -25,6 +25,10 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 	public static PointSelectState pointSelectState;
 	public static ZoneSelectState zoneSelectState;
 	
+	public JPanel component;
+	
+	public JFrame frame;
+	
 	public Editeur() 
 	{
 		super();
@@ -66,7 +70,6 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		zoneSelectState = new ZoneSelectState(this);
 		
 		stateMachine = new StateMachine();
-		stateMachine.Initialize(zoneSelectState);
 	}
 	
 	public static void main(String[] args) {
@@ -98,9 +101,13 @@ public class Editeur extends JPanel implements MouseListener,MouseMotionListener
 		
 		
 		contenu.add(component,BorderLayout.WEST);
+		editeur.component = component;
 		contenu.add(editeur);
 		
 		frame.setVisible(true);
+		
+		editeur.frame = frame;
+		editeur.stateMachine.Initialize(pointSelectState);
 	}
 	
 	public void addFigureList(FigureList figureList,int pos) 

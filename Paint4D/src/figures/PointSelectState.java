@@ -1,9 +1,12 @@
 package figures;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+
+import javax.swing.JLabel;
 
 public class PointSelectState extends State {
 
@@ -21,6 +24,16 @@ public class PointSelectState extends State {
 	public void Enter() 
 	{
 		super.Enter();
+		
+		JLabel selectingLabel = new JLabel("Point Selecting");
+		selectingLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(selectingLabel);
+		
+		JLabel cursorLabel = new JLabel();
+		cursorLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(cursorLabel);
+		
+		editeur.component.repaint();
 	}
 	
 	@Override 
@@ -34,6 +47,10 @@ public class PointSelectState extends State {
 		selectedPoint = null;
 		cachedFigList = null;
 		editeur.repaint();
+		
+		editeur.component.removeAll();
+		
+		editeur.component.repaint();
 	}
 	
 	@Override
@@ -49,6 +66,9 @@ public class PointSelectState extends State {
 		{
 			selectedPoint.setSelected(false);
 			selectedPoint = null;
+			
+			editeur.component.remove(2);
+			editeur.component.repaint();
 		}
 		
 		int i = 0;
@@ -64,6 +84,12 @@ public class PointSelectState extends State {
 			selectedFig = editeur.figures.get(--i);
 			cachedFigList = editeur.figures.clone();
 			selectedPoint.setSelected(true);
+			
+			JLabel pointLabel = new JLabel("P" + mousePos.ToString());
+			pointLabel.setPreferredSize(new Dimension(200,20));
+			editeur.component.add(pointLabel);
+			
+			editeur.component.repaint();
 		}
 		editeur.repaint();
 	}
@@ -73,6 +99,8 @@ public class PointSelectState extends State {
 		// TODO Auto-generated method stub
 		editeur.addFigureList(cachedFigList, editeur.currentFiguresList);
 		cachedFigList = null;
+		
+		editeur.repaint();
 	}
 
 	@Override
@@ -95,6 +123,21 @@ public class PointSelectState extends State {
 			Point mousePos = new Point(e.getX(),e.getY());
 			selectedPoint.setX(mousePos.getX());
 			selectedPoint.setY(mousePos.getY());
+			
+			if(editeur.component.getComponent(1) instanceof JLabel) 
+			{
+				JLabel label = (JLabel)editeur.component.getComponent(1);
+				label.setText("Cursor" + mousePos.ToString());
+				editeur.component.repaint();
+			}
+			
+			if(editeur.component.getComponent(2) instanceof JLabel) 
+			{
+				JLabel label = (JLabel)editeur.component.getComponent(2);
+				label.setText("P" + mousePos.ToString());
+				editeur.component.repaint();
+			}
+			
 			editeur.repaint();
 		}		
 	}
@@ -102,7 +145,13 @@ public class PointSelectState extends State {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		if(editeur.component.getComponent(1) instanceof JLabel) 
+		{
+			Point mousePos = new Point(e.getX(),e.getY());
+			JLabel cursorlabel = (JLabel)editeur.component.getComponent(1);
+			cursorlabel.setText("Cursor" + mousePos.ToString());
+			editeur.component.repaint();
+		}
 	}
 
 	@Override
@@ -117,8 +166,11 @@ public class PointSelectState extends State {
 		if(selectedPoint != null) 
 		{
 			selectedPoint.setSelected(false);
+			selectedPoint = null;
+			
+			editeur.component.remove(2);
+			editeur.component.repaint();
 		}
-		selectedPoint = null;
 		editeur.repaint();
 	}
 
@@ -148,6 +200,9 @@ public class PointSelectState extends State {
 			}
 			selectedPoint = null;
 			editeur.repaint();
+			
+			editeur.component.remove(2);
+			editeur.component.repaint();
 		}
 	}
 

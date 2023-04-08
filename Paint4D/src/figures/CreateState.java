@@ -1,8 +1,12 @@
 package figures;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+
+import javax.swing.JLabel;
 
 public class CreateState extends State{
 	public CreateState(Editeur editeur) {
@@ -31,12 +35,23 @@ public class CreateState extends State{
 			Polygone poly = new Polygone();
 			editeur.figures.add(poly);
 		}
+
+		JLabel figLabel = new JLabel(currentFig);
+		figLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(figLabel);
+		
+		JLabel infoLabel = new JLabel();
+		infoLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(infoLabel,BorderLayout.WEST);
+		editeur.component.repaint();
 	}
 	
 	@Override 
 	public void Exit() 
 	{
 		super.Exit();
+		editeur.component.removeAll();
+		editeur.component.repaint();
 	}
 	
 	@Override
@@ -53,6 +68,11 @@ public class CreateState extends State{
 		{
 			Polygone poly = (Polygone)editeur.figures.get(editeur.figures.size() - 1);
 			poly.add(mousePos);
+			
+			JLabel infoLabel = new JLabel();
+			infoLabel.setPreferredSize(new Dimension(200,20));
+			editeur.component.add(infoLabel,BorderLayout.WEST);
+			editeur.component.repaint();
 		}
 		editeur.addFigureList(figListClone, editeur.currentFiguresList);
 		editeur.repaint();
@@ -68,12 +88,20 @@ public class CreateState extends State{
 		{
 			Segment s = new Segment(mousePos,mousePos);
 			editeur.figures.add(s);
-			
+			JLabel segInfoLabel = new JLabel();
+			segInfoLabel.setPreferredSize(new Dimension(200,20));
+			editeur.component.add(segInfoLabel,BorderLayout.WEST);		
 		}else 
 		{
 			Cercle c = new Cercle(mousePos,0);
-			editeur.figures.add(c);
+			editeur.figures.add(c);	
 		}
+		
+		JLabel lengthInfoLabel = new JLabel();
+		lengthInfoLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(lengthInfoLabel,BorderLayout.WEST);	
+		editeur.component.repaint();	
+		
 		editeur.addFigureList(figListClone, editeur.currentFiguresList);
 		editeur.repaint();
 	}
@@ -81,31 +109,55 @@ public class CreateState extends State{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		if(!currentFig.equals("Segment") && !currentFig.equals("Cercle"))return;
+		editeur.component.removeAll();
+		JLabel figLabel = new JLabel(currentFig);
+		figLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(figLabel);
+		JLabel infoLabel = new JLabel();
+		infoLabel.setPreferredSize(new Dimension(200,20));
+		editeur.component.add(infoLabel,BorderLayout.WEST);	
+		editeur.component.repaint();
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		super.mouseEntered(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		super.mouseExited(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(!currentFig.equals("Segment") && !currentFig.equals("Cercle"))return;
+		if((!currentFig.equals("Segment") && !currentFig.equals("Cercle")) || !mouseInside)return;
 		Point mousePos = new Point(e.getX(),e.getY());
 		if(editeur.figures.get(editeur.figures.size() - 1) instanceof Segment) 
 		{
 			Segment s = (Segment)editeur.figures.get(editeur.figures.size() - 1);
 			s.setP2(mousePos);
 			editeur.repaint();
+			
+			JLabel label;
+			if(editeur.component.getComponent(2) instanceof JLabel) 
+			{
+				label = (JLabel)editeur.component.getComponent(2);
+				label.setText("P2" + mousePos.ToString());
+			}
+			
+			if(editeur.component.getComponent(3) instanceof JLabel) 
+			{
+				label = (JLabel)editeur.component.getComponent(3);
+				label.setText("Longueur = " + (int)s.getLongueur());
+				
+			}
+			editeur.component.repaint();
+			
 		}else if(editeur.figures.get(editeur.figures.size() - 1) instanceof Cercle) 
 		{
 			Cercle c = (Cercle)editeur.figures.get(editeur.figures.size() - 1);
@@ -114,6 +166,13 @@ public class CreateState extends State{
 			} catch (NegRadiusException e1) {
 				// TODO Auto-generated catch block
 			}
+			
+			JLabel label;
+			if(editeur.component.getComponent(2) instanceof JLabel) 
+			{
+				label = (JLabel)editeur.component.getComponent(2);
+				label.setText("Rayon = " + (int)c.getRayon());
+			}
 		}
 		editeur.repaint();
 	}
@@ -121,7 +180,35 @@ public class CreateState extends State{
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		JLabel label;
+		Point mousePos = new Point(e.getX(),e.getY());
+		if(currentFig.equals("Polygone") && (editeur.figures.get(editeur.figures.size() - 1) instanceof Polygone)) 
+		{			
+			Polygone poly = (Polygone)editeur.figures.get(editeur.figures.size() - 1);
+			
+			if(!(editeur.component.getComponent(poly.getSommets().size()) instanceof JLabel)) return;
+			
+			label = (JLabel)editeur.component.getComponent(poly.getSommets().size());
+			label.setText("P" + (poly.getSommets().size() + 1) + mousePos.ToString());
+			editeur.component.repaint();
+		}else 
+		{
+			if(editeur.component.getComponent(1) instanceof JLabel) 
+			{
+				String currentInfo = currentFig;
+				if(currentFig.equals("Segment")) 
+				{
+					currentInfo = "P1";
+				}else if (currentFig.equals("Cercle"))
+				{
+					currentInfo = "Centre";
+				}
+				
+				label = (JLabel)editeur.component.getComponent(1);
+				label.setText(currentInfo + mousePos.ToString());
+				editeur.component.repaint();
+			}
+		}
 	}
 
 	@Override
@@ -137,6 +224,15 @@ public class CreateState extends State{
 		{
 			Polygone poly = new Polygone();
 			editeur.figures.add(poly);
+
+			editeur.component.removeAll();
+			JLabel figLabel = new JLabel(currentFig);
+			figLabel.setPreferredSize(new Dimension(200,20));
+			editeur.component.add(figLabel);
+			JLabel polyInfoLabel = new JLabel();
+			polyInfoLabel.setPreferredSize(new Dimension(200,20));
+			editeur.component.add(polyInfoLabel,BorderLayout.WEST);	
+			editeur.component.repaint();
 		}
 	}
 

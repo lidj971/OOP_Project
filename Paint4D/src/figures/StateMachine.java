@@ -12,6 +12,8 @@ public class StateMachine implements Cloneable{
     public void ChangeState(State newState)
     {
         if (newState == null) return;
+        
+        if(newState == currentState && !(currentState instanceof CreateState))return;
         currentState.Exit();
         currentState = newState;
         currentState.Enter();
